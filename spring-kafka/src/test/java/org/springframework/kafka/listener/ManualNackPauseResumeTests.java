@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 the original author or authors.
+ * Copyright 2017-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,7 +60,7 @@ import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.event.ConsumerPausedEvent;
 import org.springframework.kafka.event.ConsumerResumedEvent;
 import org.springframework.kafka.listener.ContainerProperties.AckMode;
-import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.kafka.support.Acknowledgement;
 import org.springframework.kafka.test.utils.KafkaTestUtils;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
@@ -127,7 +127,7 @@ public class ManualNackPauseResumeTests {
 		volatile long replayTime;
 
 		@KafkaListener(id = "foo", topics = "foo", groupId = "grp")
-		public void foo(String in, Acknowledgment ack) {
+		public void foo(String in, Acknowledgement ack) {
 			this.contents.add(in);
 			if (in.equals("qux")) {
 				this.replayTime = System.currentTimeMillis() - this.replayTime;

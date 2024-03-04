@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,10 +20,10 @@ import java.util.List;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 
-import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.kafka.support.Acknowledgement;
 
 /**
- * Listener for handling a batch of incoming Kafka messages, propagating an acknowledgment
+ * Listener for handling a batch of incoming Kafka messages, propagating an acknowledgement
  * handle that recipients can invoke when the message has been processed. The list is
  * created from the consumer records object returned by a poll.
  *
@@ -49,6 +49,6 @@ public interface BatchAcknowledgingMessageListener<K, V> extends BatchMessageLis
 	}
 
 	@Override
-	void onMessage(List<ConsumerRecord<K, V>> data, Acknowledgment acknowledgment);
+	void onMessage(List<ConsumerRecord<K, V>> data, Acknowledgement acknowledgement);
 
 }

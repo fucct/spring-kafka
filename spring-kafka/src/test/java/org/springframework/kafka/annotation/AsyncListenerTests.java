@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 the original author or authors.
+ * Copyright 2023-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.listener.KafkaListenerErrorHandler;
-import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.kafka.support.Acknowledgement;
 import org.springframework.kafka.test.EmbeddedKafkaBroker;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.kafka.test.utils.KafkaTestUtils;
@@ -214,10 +214,10 @@ public class AsyncListenerTests {
 
 		@KafkaListener(id = "autoDetectFuture", topics = AUTO_DETECT_ASYNC_FUTURE,
 				containerFactory = "kafkaListenerContainerFactory")
-		public CompletableFuture<String> listen5(String baz, Acknowledgment acknowledgment) {
+		public CompletableFuture<String> listen5(String baz, Acknowledgement acknowledgement) {
 			CompletableFuture<String> future = new CompletableFuture<>();
 			future.complete(baz.toUpperCase());
-			if (acknowledgment.isOutOfOrderCommit()) {
+			if (acknowledgement.isOutOfOrderCommit()) {
 				autoDetectFuture.countDown();
 			}
 			return future;
@@ -225,10 +225,10 @@ public class AsyncListenerTests {
 
 		@KafkaListener(id = "autoDetectBatchFuture", topics = AUTO_DETECT_ASYNC_FUTURE,
 				containerFactory = "kafkaBatchListenerContainerFactory")
-		public CompletableFuture<String> listen6(List<String> baz, Acknowledgment acknowledgment) {
+		public CompletableFuture<String> listen6(List<String> baz, Acknowledgement acknowledgement) {
 			CompletableFuture<String> future = new CompletableFuture<>();
 			future.complete(String.valueOf(baz.size()));
-			if (acknowledgment.isOutOfOrderCommit()) {
+			if (acknowledgement.isOutOfOrderCommit()) {
 				autoDetectBatchFuture.countDown();
 			}
 			return future;
@@ -236,8 +236,8 @@ public class AsyncListenerTests {
 
 		@KafkaListener(id = "autoDetectMono", topics = AUTO_DETECT_ASYNC_MONO,
 				containerFactory = "kafkaListenerContainerFactory")
-		public Mono<String> listen7(String qux, Acknowledgment acknowledgment) {
-			if (acknowledgment.isOutOfOrderCommit()) {
+		public Mono<String> listen7(String qux, Acknowledgement acknowledgement) {
+			if (acknowledgement.isOutOfOrderCommit()) {
 				autoDetectMono.countDown();
 			}
 			return Mono.just(qux.toUpperCase());
@@ -245,8 +245,8 @@ public class AsyncListenerTests {
 
 		@KafkaListener(id = "autoDetectBatchMono", topics = AUTO_DETECT_ASYNC_BATCH_MONO,
 				containerFactory = "kafkaBatchListenerContainerFactory")
-		public Mono<String> listen8(List<String> qux, Acknowledgment acknowledgment) {
-			if (acknowledgment.isOutOfOrderCommit()) {
+		public Mono<String> listen8(List<String> qux, Acknowledgement acknowledgement) {
+			if (acknowledgement.isOutOfOrderCommit()) {
 				autoDetectBatchMono.countDown();
 			}
 			return Mono.just(String.valueOf(qux.size()));
@@ -261,8 +261,8 @@ public class AsyncListenerTests {
 		public final CountDownLatch handler1 = new CountDownLatch(1);
 
 		@KafkaHandler
-		public Mono<String> handler1(String foo, Acknowledgment acknowledgment) {
-			if (acknowledgment.isOutOfOrderCommit()) {
+		public Mono<String> handler1(String foo, Acknowledgement acknowledgement) {
+			if (acknowledgement.isOutOfOrderCommit()) {
 				handler1.countDown();
 			}
 			return Mono.just(foo);
@@ -276,8 +276,8 @@ public class AsyncListenerTests {
 		}
 
 		@KafkaHandler(isDefault = true)
-		public void handler2(Short baz, Acknowledgment acknowledgment) {
-			acknowledgment.acknowledge();
+		public void handler2(Short baz, Acknowledgement acknowledgement) {
+			acknowledgement.acknowledge();
 		}
 
 	}

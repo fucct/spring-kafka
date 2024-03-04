@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2023 the original author or authors.
+ * Copyright 2016-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -80,7 +80,7 @@ import org.mockito.Mockito;
 
 import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.kafka.KafkaException;
-import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.kafka.support.Acknowledgement;
 import org.springframework.kafka.support.CompositeProducerInterceptor;
 import org.springframework.kafka.support.CompositeProducerListener;
 import org.springframework.kafka.support.DefaultKafkaHeaderMapper;
@@ -303,7 +303,7 @@ public class KafkaTemplateTests {
 
 		MessagingMessageConverter messageConverter = new MessagingMessageConverter();
 
-		Acknowledgment ack = mock(Acknowledgment.class);
+		Acknowledgement ack = mock(Acknowledgement.class);
 		Consumer<?, ?> mockConsumer = mock(Consumer.class);
 		KafkaUtils.setConsumerGroupId("test.group.id");
 		Message<?> recordToMessage = messageConverter.toMessage(r2, ack, mockConsumer, String.class);
@@ -311,7 +311,7 @@ public class KafkaTemplateTests {
 		assertThat(recordToMessage.getHeaders().get(KafkaHeaders.TIMESTAMP_TYPE)).isEqualTo("CREATE_TIME");
 		assertThat(recordToMessage.getHeaders().get(KafkaHeaders.RECEIVED_TIMESTAMP)).isEqualTo(1487694048615L);
 		assertThat(recordToMessage.getHeaders().get(KafkaHeaders.RECEIVED_TOPIC)).isEqualTo(INT_KEY_TOPIC);
-		assertThat(recordToMessage.getHeaders().get(KafkaHeaders.ACKNOWLEDGMENT)).isSameAs(ack);
+		assertThat(recordToMessage.getHeaders().get(KafkaHeaders.ACKNOWLEDGEMENT)).isSameAs(ack);
 		assertThat(recordToMessage.getHeaders().get(KafkaHeaders.CONSUMER)).isSameAs(mockConsumer);
 		assertThat(recordToMessage.getHeaders().get("foo")).isEqualTo("bar");
 		assertThat(recordToMessage.getPayload()).isEqualTo("foo-message-2");

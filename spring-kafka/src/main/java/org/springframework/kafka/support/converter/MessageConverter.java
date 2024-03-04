@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2022 the original author or authors.
+ * Copyright 2016-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import java.util.Map;
 
 import org.apache.kafka.clients.consumer.Consumer;
 
-import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.kafka.support.Acknowledgement;
 import org.springframework.kafka.support.JavaUtils;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.kafka.support.KafkaUtils;
@@ -46,7 +46,7 @@ public interface MessageConverter {
 
 	/**
 	 * Set up the common headers.
-	 * @param acknowledgment the acknowledgment.
+	 * @param acknowledgement the acknowledgement.
 	 * @param consumer the consumer.
 	 * @param rawHeaders the raw headers map.
 	 * @param theKey the key.
@@ -56,9 +56,9 @@ public interface MessageConverter {
 	 * @param timestampType the timestamp type.
 	 * @param timestamp the timestamp.
 	 */
-	default void commonHeaders(Acknowledgment acknowledgment, Consumer<?, ?> consumer, Map<String, Object> rawHeaders,
-			@Nullable Object theKey, Object topic, Object partition, Object offset,
-			@Nullable Object timestampType, Object timestamp) {
+	default void commonHeaders(Acknowledgement acknowledgement, Consumer<?, ?> consumer, Map<String, Object> rawHeaders,
+							   @Nullable Object theKey, Object topic, Object partition, Object offset,
+							   @Nullable Object timestampType, Object timestamp) {
 
 		rawHeaders.put(KafkaHeaders.RECEIVED_TOPIC, topic);
 		rawHeaders.put(KafkaHeaders.RECEIVED_PARTITION, partition);
@@ -69,7 +69,7 @@ public interface MessageConverter {
 			.acceptIfNotNull(KafkaHeaders.RECEIVED_KEY, theKey, (key, val) -> rawHeaders.put(key, val))
 			.acceptIfNotNull(KafkaHeaders.GROUP_ID, MessageConverter.getGroupId(),
 					(key, val) -> rawHeaders.put(key, val))
-			.acceptIfNotNull(KafkaHeaders.ACKNOWLEDGMENT, acknowledgment, (key, val) -> rawHeaders.put(key, val))
+			.acceptIfNotNull(KafkaHeaders.ACKNOWLEDGEMENT, acknowledgement, (key, val) -> rawHeaders.put(key, val))
 			.acceptIfNotNull(KafkaHeaders.CONSUMER, consumer, (key, val) -> rawHeaders.put(key, val));
 	}
 

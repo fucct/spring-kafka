@@ -227,12 +227,12 @@ public class TransactionalContainerTests {
 		given(consumer.groupMetadata()).willReturn(consumerGroupMetadata);
 		final KafkaTemplate template = new KafkaTemplate(pf);
 		if (AckMode.MANUAL_IMMEDIATE.equals(ackMode)) {
-			props.setMessageListener((AcknowledgingMessageListener<Object, Object>) (data, acknowledgment) -> {
+			props.setMessageListener((AcknowledgingMessageListener<Object, Object>) (data, acknowledgement) -> {
 				template.send("bar", "baz");
 				if (handleError) {
 					throw new RuntimeException("fail");
 				}
-				acknowledgment.acknowledge();
+				acknowledgement.acknowledge();
 			});
 		}
 		else {

@@ -58,7 +58,7 @@ import org.springframework.kafka.listener.DefaultErrorHandler;
 import org.springframework.kafka.listener.KafkaConsumerBackoffManager;
 import org.springframework.kafka.listener.adapter.AbstractDelegatingMessageListenerAdapter;
 import org.springframework.kafka.listener.adapter.KafkaBackoffAwareMessageListenerAdapter;
-import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.kafka.support.Acknowledgement;
 import org.springframework.kafka.support.converter.ConversionException;
 import org.springframework.kafka.support.serializer.DeserializationException;
 import org.springframework.util.backoff.BackOff;
@@ -122,7 +122,7 @@ class ListenerContainerFactoryConfigurerTests {
 	private ConsumerRecord data;
 
 	@Mock
-	private Acknowledgment ack;
+	private Acknowledgement ack;
 
 	@Captor
 	private ArgumentCaptor<String> listenerIdCaptor;

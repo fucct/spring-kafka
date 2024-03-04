@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2022 the original author or authors.
+ * Copyright 2016-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ import org.apache.kafka.common.header.Headers;
 import org.apache.kafka.common.utils.Bytes;
 
 import org.springframework.core.log.LogAccessor;
-import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.kafka.support.Acknowledgement;
 import org.springframework.kafka.support.DefaultKafkaHeaderMapper;
 import org.springframework.kafka.support.JacksonPresent;
 import org.springframework.kafka.support.KafkaHeaderMapper;
@@ -139,7 +139,7 @@ public class BatchMessagingMessageConverter implements BatchMessageConverter {
 	}
 
 	@Override // NOSONAR
-	public Message<?> toMessage(List<ConsumerRecord<?, ?>> records, @Nullable Acknowledgment acknowledgment,
+	public Message<?> toMessage(List<ConsumerRecord<?, ?>> records, @Nullable Acknowledgement acknowledgement,
 			Consumer<?, ?> consumer, Type type) {
 
 		KafkaMessageHeaders kafkaMessageHeaders = new KafkaMessageHeaders(this.generateMessageId,
@@ -158,7 +158,7 @@ public class BatchMessagingMessageConverter implements BatchMessageConverter {
 		List<ConsumerRecord<?, ?>> raws = new ArrayList<>();
 		List<ConversionException> conversionFailures = new ArrayList<>();
 		addToRawHeaders(rawHeaders, convertedHeaders, natives, raws, conversionFailures);
-		commonHeaders(acknowledgment, consumer, rawHeaders, keys, topics, partitions, offsets, timestampTypes,
+		commonHeaders(acknowledgement, consumer, rawHeaders, keys, topics, partitions, offsets, timestampTypes,
 				timestamps);
 		boolean logged = false;
 		String info = null;

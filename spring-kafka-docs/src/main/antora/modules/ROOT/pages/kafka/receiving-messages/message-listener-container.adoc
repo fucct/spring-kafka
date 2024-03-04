@@ -190,9 +190,9 @@ The following lists describes the action taken by the container for each `AckMod
 * `TIME`: Commit the offset when all the records returned by the `poll()` have been processed, as long as the `ackTime` since the last commit has been exceeded.
 * `COUNT`: Commit the offset when all the records returned by the `poll()` have been processed, as long as `ackCount` records have been received since the last commit.
 * `COUNT_TIME`: Similar to `TIME` and `COUNT`, but the commit is performed if either condition is `true`.
-* `MANUAL`: The message listener is responsible to `acknowledge()` the `Acknowledgment`.
+* `MANUAL`: The message listener is responsible to `acknowledge()` the `Acknowledgement`.
 After that, the same semantics as `BATCH` are applied.
-* `MANUAL_IMMEDIATE`: Commit the offset immediately when the `Acknowledgment.acknowledge()` method is called by the listener.
+* `MANUAL_IMMEDIATE`: Commit the offset immediately when the `Acknowledgement.acknowledge()` method is called by the listener.
 
 When using xref:kafka/transactions.adoc[transactions], the offset(s) are sent to the transaction and the semantics are equivalent to `RECORD` or `BATCH`, depending on the listener type (record or batch).
 
@@ -206,11 +206,11 @@ See `setCommitCallback` to get the results of asynchronous commits; the default 
 Because the listener container has its own mechanism for committing offsets, it prefers the Kafka `ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG` to be `false`.
 Starting with version 2.3, it unconditionally sets it to false unless specifically set in the consumer factory or the container's consumer property overrides.
 
-The `Acknowledgment` has the following method:
+The `Acknowledgement` has the following method:
 
 [source, java]
 ----
-public interface Acknowledgment {
+public interface Acknowledgement {
 
     void acknowledge();
 
@@ -219,7 +219,7 @@ public interface Acknowledgment {
 
 This method gives the listener control over when offsets are committed.
 
-Starting with version 2.3, the `Acknowledgment` interface has two additional methods `nack(long sleep)` and `nack(int index, long sleep)`.
+Starting with version 2.3, the `Acknowledgement` interface has two additional methods `nack(long sleep)` and `nack(int index, long sleep)`.
 The first one is used with a record listener, the second with a batch listener.
 Calling the wrong method for your listener type will throw an `IllegalStateException`.
 
@@ -245,7 +245,7 @@ The actual sleep time, and its resolution, depends on the container's `pollTimeo
 The minimum sleep time is equal to the `pollTimeout` and all sleep times will be a multiple of it.
 For small sleep times or, to increase its accuracy, consider reducing the container's `pollTimeout`.
 
-Starting with version 3.0.10, batch listeners can commit the offsets of parts of the batch, using `acknowledge(index)` on the `Acknowledgment` argument.
+Starting with version 3.0.10, batch listeners can commit the offsets of parts of the batch, using `acknowledge(index)` on the `Acknowledgement` argument.
 When this method is called, the offset of the record at the index (as well as all previous records) will be committed.
 Calling `acknowledge()` after a partial batch commit is performed will commit the offsets of the remainder of the batch.
 The following limitations apply:

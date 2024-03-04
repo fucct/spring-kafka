@@ -32,7 +32,7 @@ containerProperties.setConsumerRebalanceListener(new ConsumerAwareRebalanceListe
 
     @Override
     public void onPartitionsRevokedBeforeCommit(Consumer<?, ?> consumer, Collection<TopicPartition> partitions) {
-        // acknowledge any pending Acknowledgments (if using manual acks)
+        // acknowledge any pending Acknowledgements (if using manual acks)
     }
 
     @Override

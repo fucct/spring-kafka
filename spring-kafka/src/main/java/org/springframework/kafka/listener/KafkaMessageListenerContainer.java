@@ -106,7 +106,7 @@ import org.springframework.kafka.listener.ContainerProperties.AckMode;
 import org.springframework.kafka.listener.ContainerProperties.AssignmentCommitOption;
 import org.springframework.kafka.listener.ContainerProperties.EOSMode;
 import org.springframework.kafka.listener.adapter.AsyncRepliesAware;
-import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.kafka.support.Acknowledgement;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.kafka.support.KafkaUtils;
 import org.springframework.kafka.support.LogIfLevelEnabled;
@@ -2435,7 +2435,7 @@ public class KafkaMessageListenerContainer<K, V> // NOSONAR line count
 			if (this.wantsFullRecords) {
 				this.batchListener.onMessage(records, // NOSONAR
 						this.isAnyManualAck
-								? new ConsumerBatchAcknowledgment(records, recordList)
+								? new ConsumerBatchAcknowledgement(records, recordList)
 								: null,
 						this.consumer);
 			}
@@ -2452,12 +2452,12 @@ public class KafkaMessageListenerContainer<K, V> // NOSONAR line count
 					case ACKNOWLEDGING_CONSUMER_AWARE ->
 						this.batchListener.onMessage(recordList,
 								this.isAnyManualAck
-										? new ConsumerBatchAcknowledgment(records, recordList)
+										? new ConsumerBatchAcknowledgement(records, recordList)
 										: null, this.consumer);
 					case ACKNOWLEDGING ->
 						this.batchListener.onMessage(recordList,
 								this.isAnyManualAck
-										? new ConsumerBatchAcknowledgment(records, recordList)
+										? new ConsumerBatchAcknowledgement(records, recordList)
 										: null);
 					case CONSUMER_AWARE -> this.batchListener.onMessage(recordList, this.consumer);
 					case SIMPLE -> this.batchListener.onMessage(recordList);
@@ -2870,13 +2870,13 @@ public class KafkaMessageListenerContainer<K, V> // NOSONAR line count
 						case ACKNOWLEDGING_CONSUMER_AWARE ->
 							this.listener.onMessage(cRecord,
 									this.isAnyManualAck
-											? new ConsumerAcknowledgment(cRecord)
+											? new ConsumerAcknowledgement(cRecord)
 											: null, this.consumer);
 						case CONSUMER_AWARE -> this.listener.onMessage(cRecord, this.consumer);
 						case ACKNOWLEDGING ->
 							this.listener.onMessage(cRecord,
 									this.isAnyManualAck
-											? new ConsumerAcknowledgment(cRecord)
+											? new ConsumerAcknowledgement(cRecord)
 											: null);
 						case SIMPLE -> this.listener.onMessage(cRecord);
 					}
@@ -3388,13 +3388,13 @@ public class KafkaMessageListenerContainer<K, V> // NOSONAR line count
 			return this.offsetAndMetadataProvider.provide(this.listenerMetadata, offset);
 		}
 
-		private final class ConsumerAcknowledgment implements Acknowledgment {
+		private final class ConsumerAcknowledgement implements Acknowledgement {
 
 			private final ConsumerRecord<K, V> cRecord;
 
 			private volatile boolean acked;
 
-			ConsumerAcknowledgment(ConsumerRecord<K, V> cRecord) {
+			ConsumerAcknowledgement(ConsumerRecord<K, V> cRecord) {
 				this.cRecord = cRecord;
 			}
 
@@ -3423,12 +3423,12 @@ public class KafkaMessageListenerContainer<K, V> // NOSONAR line count
 
 			@Override
 			public String toString() {
-				return "Acknowledgment for " + KafkaUtils.format(this.cRecord);
+				return "Acknowledgement for " + KafkaUtils.format(this.cRecord);
 			}
 
 		}
 
-		private final class ConsumerBatchAcknowledgment implements Acknowledgment {
+		private final class ConsumerBatchAcknowledgement implements Acknowledgement {
 
 			private final ConsumerRecords<K, V> records;
 
@@ -3438,8 +3438,8 @@ public class KafkaMessageListenerContainer<K, V> // NOSONAR line count
 
 			private volatile int partial = -1;
 
-			ConsumerBatchAcknowledgment(ConsumerRecords<K, V> records,
-					@Nullable List<ConsumerRecord<K, V>> recordList) {
+			ConsumerBatchAcknowledgement(ConsumerRecords<K, V> records,
+										 @Nullable List<ConsumerRecord<K, V>> recordList) {
 
 				this.records = records;
 				this.recordList = recordList;
@@ -3471,14 +3471,14 @@ public class KafkaMessageListenerContainer<K, V> // NOSONAR line count
 						() -> String.format("index (%d) must be greater than the previous partial commit (%d)", index,
 								this.partial));
 				Assert.state(ListenerConsumer.this.isManualImmediateAck,
-						"Partial batch acknowledgment is only supported with AckMode.MANUAL_IMMEDIATE");
+						"Partial batch acknowledgement is only supported with AckMode.MANUAL_IMMEDIATE");
 				Assert.state(this.recordList != null,
-						"Listener must receive a List of records to use partial batch acknowledgment");
+						"Listener must receive a List of records to use partial batch acknowledgement");
 				Assert.isTrue(index >= 0 && index < this.recordList.size(),
 						() -> String.format("index (%d) is out of range (%d-%d)", index, 0,
 								this.recordList.size() - 1));
 				Assert.state(Thread.currentThread().equals(ListenerConsumer.this.consumerThread),
-						"Partial batch acknowledgment is only supported on the consumer thread");
+						"Partial batch acknowledgement is only supported on the consumer thread");
 				Map<TopicPartition, List<ConsumerRecord<K, V>>> offsetsToCommit = new LinkedHashMap<>();
 				for (int i = this.partial + 1; i <= index; i++) {
 					ConsumerRecord<K, V> record = this.recordList.get(i);
@@ -3526,7 +3526,7 @@ public class KafkaMessageListenerContainer<K, V> // NOSONAR line count
 
 			@Override
 			public String toString() {
-				return "Acknowledgment for " + this.records;
+				return "Acknowledgement for " + this.records;
 			}
 
 		}

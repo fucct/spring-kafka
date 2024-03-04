@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2023 the original author or authors.
+ * Copyright 2016-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecords;
 
 import org.springframework.kafka.listener.BatchAcknowledgingConsumerAwareMessageListener;
 import org.springframework.kafka.listener.KafkaListenerErrorHandler;
-import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.kafka.support.Acknowledgement;
 import org.springframework.kafka.support.converter.BatchMessageConverter;
 import org.springframework.kafka.support.converter.BatchMessagingMessageConverter;
 import org.springframework.kafka.support.converter.RecordMessageConverter;
@@ -44,7 +44,7 @@ import org.springframework.util.Assert;
  * <p>Wraps the incoming Kafka Message to Spring's {@link Message} abstraction.
  *
  * <p>The original {@code List<ConsumerRecord>} and
- * the {@link Acknowledgment} are provided as additional arguments so that these can
+ * the {@link Acknowledgement} are provided as additional arguments so that these can
  * be injected as method arguments if necessary.
  *
  * @param <K> the key type.
@@ -123,9 +123,9 @@ public class BatchMessagingMessageListenerAdapter<K, V> extends MessagingMessage
 	}
 
 	@Override
-	public void onMessage(ConsumerRecords<K, V> records, @Nullable Acknowledgment acknowledgment,
+	public void onMessage(ConsumerRecords<K, V> records, @Nullable Acknowledgement acknowledgement,
 			Consumer<K, V> consumer) {
-		invoke(records, acknowledgment, consumer, NULL_MESSAGE);
+		invoke(records, acknowledgement, consumer, NULL_MESSAGE);
 	}
 
 	/**
@@ -134,11 +134,11 @@ public class BatchMessagingMessageListenerAdapter<K, V> extends MessagingMessage
 	 * Delegate the message to the target listener method, with appropriate conversion of
 	 * the message argument.
 	 * @param records the incoming list of Kafka {@link ConsumerRecord}.
-	 * @param acknowledgment the acknowledgment.
+	 * @param acknowledgement the acknowledgement.
 	 * @param consumer the consumer.
 	 */
 	@Override
-	public void onMessage(List<ConsumerRecord<K, V>> records, @Nullable Acknowledgment acknowledgment,
+	public void onMessage(List<ConsumerRecord<K, V>> records, @Nullable Acknowledgement acknowledgement,
 			Consumer<?, ?> consumer) {
 
 		Message<?> message;
@@ -146,33 +146,33 @@ public class BatchMessagingMessageListenerAdapter<K, V> extends MessagingMessage
 			if (isMessageList() || this.batchToRecordAdapter != null) {
 				List<Message<?>> messages = new ArrayList<>(records.size());
 				for (ConsumerRecord<K, V> cRecord : records) {
-					messages.add(toMessagingMessage(cRecord, acknowledgment, consumer));
+					messages.add(toMessagingMessage(cRecord, acknowledgement, consumer));
 				}
 				if (this.batchToRecordAdapter == null) {
 					message = MessageBuilder.withPayload(messages).build();
 				}
 				else {
 					logger.debug(() -> "Processing " + messages);
-					this.batchToRecordAdapter.adapt(messages, records, acknowledgment, consumer, this::invoke);
+					this.batchToRecordAdapter.adapt(messages, records, acknowledgement, consumer, this::invoke);
 					return;
 				}
 			}
 			else {
-				message = toMessagingMessage(records, acknowledgment, consumer);
+				message = toMessagingMessage(records, acknowledgement, consumer);
 			}
 		}
 		else {
 			message = NULL_MESSAGE; // optimization since we won't need any conversion to invoke
 		}
 		logger.debug(() -> "Processing [" + message + "]");
-		invoke(records, acknowledgment, consumer, message);
+		invoke(records, acknowledgement, consumer, message);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	protected Message<?> toMessagingMessage(List records, @Nullable Acknowledgment acknowledgment,
+	protected Message<?> toMessagingMessage(List records, @Nullable Acknowledgement acknowledgement,
 			Consumer<?, ?> consumer) {
 
-		return getBatchMessageConverter().toMessage(records, acknowledgment, consumer, getType());
+		return getBatchMessageConverter().toMessage(records, acknowledgement, consumer, getType());
 	}
 
 }

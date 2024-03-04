@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 the original author or authors.
+ * Copyright 2015-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,10 +29,10 @@ import org.springframework.kafka.listener.ContainerProperties.AckMode;
  * @author Marius Bogoevici
  * @author Gary Russell
  */
-public interface Acknowledgment {
+public interface Acknowledgement {
 
 	/**
-	 * Invoked when the record or batch for which the acknowledgment has been created has
+	 * Invoked when the record or batch for which the acknowledgement has been created has
 	 * been processed. Calling this method implies that all the previous messages in the
 	 * partition have been processed already.
 	 */
@@ -50,20 +50,20 @@ public interface Acknowledgment {
 	 * @since 2.8.7
 	 */
 	default void nack(Duration sleep) {
-		throw new UnsupportedOperationException("nack(sleep) is not supported by this Acknowledgment");
+		throw new UnsupportedOperationException("nack(sleep) is not supported by this Acknowledgement");
 	}
 
 	/**
 	 * Acknowledge the record at an index in the batch - commit the offset(s) of records
 	 * in the batch up to and including the index. Requires
 	 * {@link AckMode#MANUAL_IMMEDIATE}. The index must be greater than any previous
-	 * partial batch acknowledgment index for this batch and in the range of the record
+	 * partial batch acknowledgement index for this batch and in the range of the record
 	 * list. This method must be called on the listener thread.
 	 * @param index the index of the record to acknowledge.
 	 * @since 3.0.10
 	 */
 	default void acknowledge(int index) {
-		throw new UnsupportedOperationException("ack(index) is not supported by this Acknowledgment");
+		throw new UnsupportedOperationException("ack(index) is not supported by this Acknowledgement");
 	}
 
 	/**
@@ -78,7 +78,7 @@ public interface Acknowledgment {
 	 * @since 2.8.7
 	 */
 	default void nack(int index, Duration sleep) {
-		throw new UnsupportedOperationException("nack(index, sleep) is not supported by this Acknowledgment");
+		throw new UnsupportedOperationException("nack(index, sleep) is not supported by this Acknowledgement");
 	}
 
 	default boolean isOutOfOrderCommit() {

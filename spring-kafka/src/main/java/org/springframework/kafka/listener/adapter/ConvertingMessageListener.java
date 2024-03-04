@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2022 the original author or authors.
+ * Copyright 2016-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import org.springframework.kafka.listener.AcknowledgingMessageListener;
 import org.springframework.kafka.listener.ConsumerAwareMessageListener;
 import org.springframework.kafka.listener.DelegatingMessageListener;
 import org.springframework.kafka.listener.MessageListener;
-import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.kafka.support.Acknowledgement;
 import org.springframework.kafka.support.KafkaHeaderMapper;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.converter.GenericMessageConverter;
@@ -106,16 +106,16 @@ public class ConvertingMessageListener<V> implements DelegatingMessageListener<M
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public void onMessage(ConsumerRecord receivedRecord, Acknowledgment acknowledgment, Consumer consumer) {
+	public void onMessage(ConsumerRecord receivedRecord, Acknowledgement acknowledgement, Consumer consumer) {
 		ConsumerRecord convertedConsumerRecord = convertConsumerRecord(receivedRecord);
 		if (this.delegate instanceof AcknowledgingConsumerAwareMessageListener) {
-			this.delegate.onMessage(convertedConsumerRecord, acknowledgment, consumer);
+			this.delegate.onMessage(convertedConsumerRecord, acknowledgement, consumer);
 		}
 		else if (this.delegate instanceof ConsumerAwareMessageListener) {
 			this.delegate.onMessage(convertedConsumerRecord, consumer);
 		}
 		else if (this.delegate instanceof AcknowledgingMessageListener) {
-			this.delegate.onMessage(convertedConsumerRecord, acknowledgment);
+			this.delegate.onMessage(convertedConsumerRecord, acknowledgement);
 		}
 		else {
 			this.delegate.onMessage(convertedConsumerRecord);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 the original author or authors.
+ * Copyright 2022-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.kafka.listener.adapter.BatchMessagingMessageListenerAdapter;
 import org.springframework.kafka.listener.adapter.HandlerAdapter;
 import org.springframework.kafka.listener.adapter.RecordMessagingMessageListenerAdapter;
-import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.kafka.support.Acknowledgement;
 
 /**
  * @author Gary Russell
@@ -47,8 +47,8 @@ public class ListenerErrorHandlerTests {
 
 	static {
 		try {
-			test1 = TestListener.class.getDeclaredMethod("test1", String.class, Acknowledgment.class);
-			test2 = TestListener.class.getDeclaredMethod("test2", List.class, Acknowledgment.class);
+			test1 = TestListener.class.getDeclaredMethod("test1", String.class, Acknowledgement.class);
+			test2 = TestListener.class.getDeclaredMethod("test2", List.class, Acknowledgement.class);
 		}
 		catch (NoSuchMethodException | SecurityException e) {
 			throw new IllegalStateException(e);
@@ -66,7 +66,7 @@ public class ListenerErrorHandlerTests {
 		HandlerAdapter handler = mock(HandlerAdapter.class);
 		willThrow(new RuntimeException("test")).given(handler).invoke(any(), any(), any(), any());
 		adapter.setHandlerMethod(handler);
-		Acknowledgment ack = mock(Acknowledgment.class);
+		Acknowledgement ack = mock(Acknowledgement.class);
 		adapter.onMessage(mock(ConsumerRecord.class), ack, mock(Consumer.class));
 		verify(ack).acknowledge();
 	}
@@ -82,17 +82,17 @@ public class ListenerErrorHandlerTests {
 		HandlerAdapter handler = mock(HandlerAdapter.class);
 		willThrow(new RuntimeException("test")).given(handler).invoke(any(), any(), any());
 		adapter.setHandlerMethod(handler);
-		Acknowledgment ack = mock(Acknowledgment.class);
+		Acknowledgement ack = mock(Acknowledgement.class);
 		adapter.onMessage(Collections.emptyList(), ack, mock(Consumer.class));
 		verify(ack).acknowledge();
 	}
 
 	private static final class TestListener {
 
-		void test1(String foo, Acknowledgment ack) {
+		void test1(String foo, Acknowledgement ack) {
 		}
 
-		void test2(List<String> foo, Acknowledgment ack) {
+		void test2(List<String> foo, Acknowledgement ack) {
 		}
 
 	}

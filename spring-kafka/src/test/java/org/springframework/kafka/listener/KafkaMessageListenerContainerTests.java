@@ -113,7 +113,7 @@ import org.springframework.kafka.event.NonResponsiveConsumerEvent;
 import org.springframework.kafka.listener.ContainerProperties.AckMode;
 import org.springframework.kafka.listener.ContainerProperties.AssignmentCommitOption;
 import org.springframework.kafka.listener.adapter.FilteringMessageListenerAdapter;
-import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.kafka.support.Acknowledgement;
 import org.springframework.kafka.support.LogIfLevelEnabled.Level;
 import org.springframework.kafka.support.TopicPartitionOffset;
 import org.springframework.kafka.support.TopicPartitionOffset.SeekPosition;
@@ -677,7 +677,7 @@ public class KafkaMessageListenerContainerTests {
 		containerProps.setAckMode(ackMode);
 		containerProps.setAsyncAcks(true);
 		final CountDownLatch latch = new CountDownLatch(4);
-		final List<Acknowledgment> acks = new ArrayList<>();
+		final List<Acknowledgement> acks = new ArrayList<>();
 		final AtomicReference<IllegalStateException> illegal = new AtomicReference<>();
 		AcknowledgingMessageListener<Integer, String> messageListener = (data, ack) -> {
 			if (latch.getCount() == 4) {
@@ -794,7 +794,7 @@ public class KafkaMessageListenerContainerTests {
 		containerProps.setCommitLogLevel(Level.WARN);
 		final CountDownLatch latch1 = new CountDownLatch(4);
 		final CountDownLatch latch2 = new CountDownLatch(5);
-		final List<Acknowledgment> acks = new ArrayList<>();
+		final List<Acknowledgement> acks = new ArrayList<>();
 		if (batch) {
 			BatchAcknowledgingMessageListener<Integer, String> batchML = (data, ack) -> {
 				acks.add(ack);
@@ -1018,14 +1018,14 @@ public class KafkaMessageListenerContainerTests {
 		containerProps.setAckMode(ackMode);
 		containerProps.setMissingTopicsFatal(false);
 		final CountDownLatch latch = new CountDownLatch(2);
-		final List<Acknowledgment> acks = new ArrayList<>();
+		final List<Acknowledgement> acks = new ArrayList<>();
 		final AtomicReference<Thread> consumerThread = new AtomicReference<>();
 		AcknowledgingMessageListener<Integer, String> messageListener = spy(
 				new AcknowledgingMessageListener<Integer, String>() { // Mockito doesn't mock final classes
 
 					@Override
-					public void onMessage(ConsumerRecord<Integer, String> data, Acknowledgment acknowledgment) {
-						acks.add(acknowledgment);
+					public void onMessage(ConsumerRecord<Integer, String> data, Acknowledgement acknowledgement) {
+						acks.add(acknowledgement);
 						consumerThread.set(Thread.currentThread());
 						latch.countDown();
 						if (latch.getCount() == 0) {
@@ -1059,7 +1059,7 @@ public class KafkaMessageListenerContainerTests {
 		assertThat(commitLatch.await(10, TimeUnit.SECONDS)).isTrue();
 		InOrder inOrder = inOrder(messageListener, consumer);
 		inOrder.verify(consumer).poll(Duration.ofMillis(ContainerProperties.DEFAULT_POLL_TIMEOUT));
-		inOrder.verify(messageListener, times(2)).onMessage(any(ConsumerRecord.class), any(Acknowledgment.class));
+		inOrder.verify(messageListener, times(2)).onMessage(any(ConsumerRecord.class), any(Acknowledgement.class));
 		inOrder.verify(consumer).commitSync(anyMap(), any());
 		container.stop();
 		assertThat(commitThread.get()).isSameAs(consumerThread.get());
@@ -1988,7 +1988,7 @@ public class KafkaMessageListenerContainerTests {
 		final List<AtomicInteger> counts = new ArrayList<>();
 		counts.add(new AtomicInteger());
 		counts.add(new AtomicInteger());
-		final Acknowledgment[] pendingAcks = new Acknowledgment[2];
+		final Acknowledgement[] pendingAcks = new Acknowledgement[2];
 		containerProps.setMessageListener((AcknowledgingMessageListener<Integer, String>) (message, ack) -> {
 			logger.info("manual ack: " + message);
 			if (counts.get(message.partition()).incrementAndGet() < 2) {
@@ -3614,17 +3614,17 @@ public class KafkaMessageListenerContainerTests {
 		containerProps.setAckMode(AckMode.MANUAL);
 		containerProps.setClientId("clientId");
 		containerProps.setIdleEventInterval(100L);
-		AtomicReference<Acknowledgment> acknowledgment = new AtomicReference<>();
+		AtomicReference<Acknowledgement> acknowledgement = new AtomicReference<>();
 		containerProps.setMessageListener(
-				(AcknowledgingMessageListener<Object, Object>) (rec, ack) -> acknowledgment.set(ack));
+				(AcknowledgingMessageListener<Object, Object>) (rec, ack) -> acknowledgement.set(ack));
 		containerProps.setConsumerRebalanceListener(new ConsumerAwareRebalanceListener() {
 
 			@Override
 			public void onPartitionsRevokedBeforeCommit(Consumer<?, ?> consumer,
 					Collection<TopicPartition> partitions) {
 
-				if (acknowledgment.get() != null) {
-					acknowledgment.get().acknowledge();
+				if (acknowledgement.get() != null) {
+					acknowledgement.get().acknowledge();
 				}
 			}
 

@@ -717,7 +717,7 @@ See <<seek>> for more information.
 The `ContainerProperties` provides an `idleBetweenPolls` option to let the main loop in the listener container to sleep between `KafkaConsumer.poll()` calls.
 See its JavaDocs and xref:kafka/receiving-messages/message-listener-container.adoc#kafka-container[Using `KafkaMessageListenerContainer`] for more information.
 
-When using `AckMode.MANUAL` (or `MANUAL_IMMEDIATE`) you can now cause a redelivery by calling `nack` on the `Acknowledgment`.
+When using `AckMode.MANUAL` (or `MANUAL_IMMEDIATE`) you can now cause a redelivery by calling `nack` on the `Acknowledgement`.
 See xref:kafka/receiving-messages/message-listener-container.adoc#committing-offsets[Committing Offsets] for more information.
 
 Listener performance can now be monitored using Micrometer `Timer` s.

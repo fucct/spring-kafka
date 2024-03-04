@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2023 the original author or authors.
+ * Copyright 2019-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ import org.springframework.kafka.listener.AcknowledgingConsumerAwareMessageListe
 import org.springframework.kafka.listener.KafkaConsumerBackoffManager;
 import org.springframework.kafka.listener.TimestampedException;
 import org.springframework.kafka.retrytopic.RetryTopicHeaders;
-import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.kafka.support.Acknowledgement;
 
 
 /**
@@ -62,7 +62,7 @@ class KafkaBackoffAwareMessageListenerAdapterTests {
 	private AcknowledgingConsumerAwareMessageListener<Object, Object> delegate;
 
 	@Mock
-	private Acknowledgment ack;
+	private Acknowledgement ack;
 
 	@Mock
 	private ConsumerRecord<Object, Object> data;

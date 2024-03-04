@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 the original author or authors.
+ * Copyright 2017-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,7 +58,7 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.config.KafkaListenerEndpointRegistry;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.listener.ContainerProperties.AckMode;
-import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.kafka.support.Acknowledgement;
 import org.springframework.kafka.test.utils.KafkaTestUtils;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
@@ -133,7 +133,7 @@ public class ManualAckPartialBatchTests {
 		final CountDownLatch closeLatch = new CountDownLatch(1);
 
 		@KafkaListener(id = CONTAINER_ID, topics = "foo")
-		public void foo(List<String> in, Acknowledgment ack) {
+		public void foo(List<String> in, Acknowledgement ack) {
 			contents.addAll(in);
 			this.deliveryLatch.countDown();
 			try {

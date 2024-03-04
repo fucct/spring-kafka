@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 the original author or authors.
+ * Copyright 2017-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,11 +19,11 @@ package org.springframework.kafka.listener;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 
-import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.kafka.support.Acknowledgement;
 import org.springframework.lang.Nullable;
 
 /**
- * Listener for handling incoming Kafka messages, propagating an acknowledgment handle that recipients
+ * Listener for handling incoming Kafka messages, propagating an acknowledgement handle that recipients
  * can invoke when the message has been processed. Access to the {@link Consumer} is provided.
  *
  * @param <K> the key type.
@@ -47,6 +47,6 @@ public interface AcknowledgingConsumerAwareMessageListener<K, V> extends Message
 	}
 
 	@Override
-	void onMessage(ConsumerRecord<K, V> data, @Nullable Acknowledgment acknowledgment, Consumer<?, ?> consumer);
+	void onMessage(ConsumerRecord<K, V> data, @Nullable Acknowledgement acknowledgement, Consumer<?, ?> consumer);
 
 }

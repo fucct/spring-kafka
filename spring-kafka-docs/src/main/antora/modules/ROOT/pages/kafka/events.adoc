@@ -187,7 +187,7 @@ The following example uses both `@KafkaListener` and `@EventListener`:
 public class Listener {
 
     @KafkaListener(id = "qux", topics = "annotated")
-    public void listen4(@Payload String foo, Acknowledgment ack) {
+    public void listen4(@Payload String foo, Acknowledgement ack) {
         ...
     }
 

@@ -104,7 +104,7 @@ public class ContainerProperties extends ConsumerProperties {
 		/**
 		 * Listener is responsible for acking - use a
 		 * {@link org.springframework.kafka.listener.AcknowledgingMessageListener}; the
-		 * commit will be performed immediately if the {@code Acknowledgment} is
+		 * commit will be performed immediately if the {@code Acknowledgement} is
 		 * acknowledged on the calling consumer thread; otherwise, the acks will be queued
 		 * and offsets will be committed when all the records returned by the previous
 		 * poll have been processed by the listener; results will be indeterminate if you
@@ -211,7 +211,7 @@ public class ContainerProperties extends ConsumerProperties {
 	 * previous poll have been processed by the listener.</li>
 	 * <li>MANUAL_IMMEDIATE: Listener is responsible for acking - use a
 	 * {@link org.springframework.kafka.listener.AcknowledgingMessageListener}. The commit
-	 * will be performed immediately if the {@code Acknowledgment} is acknowledged on the
+	 * will be performed immediately if the {@code Acknowledgement} is acknowledged on the
 	 * calling consumer thread. Otherwise, the acks will be queued and offsets will be
 	 * committed when all the records returned by the previous poll have been processed by
 	 * the listener. Results will be indeterminate if you sometimes acknowledge on the
@@ -368,7 +368,7 @@ public class ContainerProperties extends ConsumerProperties {
 	 * previous poll have been processed by the listener.</li>
 	 * <li>MANUAL_IMMEDIATE: Listener is responsible for acking - use a
 	 * {@link org.springframework.kafka.listener.AcknowledgingMessageListener}. The commit
-	 * will be performed immediately if the {@code Acknowledgment} is acknowledged on the
+	 * will be performed immediately if the {@code Acknowledgement} is acknowledged on the
 	 * calling consumer thread. Otherwise, the acks will be queued and offsets will be
 	 * committed when all the records returned by the previous poll have been processed by
 	 * the listener. Results will be indeterminate if you sometimes acknowledge on the
@@ -961,7 +961,7 @@ public class ContainerProperties extends ConsumerProperties {
 	}
 
 	/**
-	 * When true, async manual acknowledgments are supported.
+	 * When true, async manual acknowledgements are supported.
 	 * @return true for async ack support.
 	 * @since 2.8
 	 */
@@ -970,7 +970,7 @@ public class ContainerProperties extends ConsumerProperties {
 	}
 
 	/**
-	 * Set to true to support asynchronous record acknowledgments. Only applies with
+	 * Set to true to support asynchronous record acknowledgements. Only applies with
 	 * {@link AckMode#MANUAL} or {@link AckMode#MANUAL_IMMEDIATE}. Out of order offset
 	 * commits are deferred until all previous offsets in the partition have been
 	 * committed. The consumer is paused, if necessary, until all acks have been

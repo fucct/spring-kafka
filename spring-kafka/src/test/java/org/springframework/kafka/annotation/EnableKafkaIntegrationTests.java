@@ -118,7 +118,7 @@ import org.springframework.kafka.listener.adapter.ConsumerRecordMetadata;
 import org.springframework.kafka.listener.adapter.FilteringMessageListenerAdapter;
 import org.springframework.kafka.listener.adapter.MessagingMessageListenerAdapter;
 import org.springframework.kafka.listener.adapter.RecordFilterStrategy;
-import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.kafka.support.Acknowledgement;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.kafka.support.KafkaNull;
 import org.springframework.kafka.support.SendResult;
@@ -870,8 +870,8 @@ public class EnableKafkaIntegrationTests {
 		assertThat(this.config.badAckLatch.await(30, TimeUnit.SECONDS)).isTrue();
 		assertThat(this.config.badAckException).isInstanceOf(IllegalStateException.class);
 		assertThat(this.config.badAckException.getMessage())
-				.isEqualTo("No Acknowledgment available as an argument, "
-						+ "the listener container must have a MANUAL AckMode to populate the Acknowledgment.");
+				.isEqualTo("No Acknowledgement available as an argument, "
+						+ "the listener container must have a MANUAL AckMode to populate the Acknowledgement.");
 	}
 
 	@Test
@@ -1156,7 +1156,7 @@ public class EnableKafkaIntegrationTests {
 			factory.setRecordMessageConverter(new RecordMessageConverter() {
 
 				@Override
-				public Message<?> toMessage(ConsumerRecord<?, ?> record, Acknowledgment acknowledgment,
+				public Message<?> toMessage(ConsumerRecord<?, ?> record, Acknowledgement acknowledgement,
 						Consumer<?, ?> consumer, Type payloadType) {
 
 					throw new UnsupportedOperationException();
@@ -1906,7 +1906,7 @@ public class EnableKafkaIntegrationTests {
 
 		volatile ConsumerRecord<?, ?> capturedRecord;
 
-		volatile Acknowledgment ack;
+		volatile Acknowledgement ack;
 
 		volatile Object payload;
 
@@ -2036,7 +2036,7 @@ public class EnableKafkaIntegrationTests {
 						"max.poll.interval.ms:#{'${poll.interval:60000}'}",
 						ConsumerConfig.MAX_POLL_RECORDS_CONFIG + "=#{'${poll.recs:100}'}"
 				})
-		public void listen4(@Payload String foo, Acknowledgment ack, Consumer<?, ?> consumer) {
+		public void listen4(@Payload String foo, Acknowledgement ack, Consumer<?, ?> consumer) {
 			this.ack = ack;
 			this.ack.acknowledge();
 			this.listen4Consumer = consumer;
@@ -2145,7 +2145,7 @@ public class EnableKafkaIntegrationTests {
 		}
 
 		@KafkaListener(id = "list4", topics = "annotated17", containerFactory = "batchManualFactory")
-		public void listen13(List<ConsumerRecord<Integer, String>> list, Acknowledgment ack, Consumer<?, ?> consumer) {
+		public void listen13(List<ConsumerRecord<Integer, String>> list, Acknowledgement ack, Consumer<?, ?> consumer) {
 			this.payload = list;
 			this.ack = ack;
 			ack.acknowledge();
@@ -2166,7 +2166,7 @@ public class EnableKafkaIntegrationTests {
 		}
 
 		@KafkaListener(id = "list6", topics = "annotated19", containerFactory = "batchManualFactory2")
-		public void listen15(List<Message<?>> list, Acknowledgment ack) {
+		public void listen15(List<Message<?>> list, Acknowledgement ack) {
 			this.payload = list;
 			this.ack = ack;
 			ack.acknowledge();
@@ -2261,7 +2261,7 @@ public class EnableKafkaIntegrationTests {
 
 		@KafkaListener(id = "ackWithAutoContainer", topics = "annotated28", errorHandler = "badAckConfigErrorHandler",
 				containerFactory = "withNoReplyTemplateContainerFactory")
-		public void ackWithAutoContainerListener(String payload, Acknowledgment ack) {
+		public void ackWithAutoContainerListener(String payload, Acknowledgement ack) {
 			// empty
 		}
 
@@ -2351,7 +2351,7 @@ public class EnableKafkaIntegrationTests {
 
 		@KafkaListener(id = "seekOnIdle", topics = "seekOnIdle", autoStartup = "false", concurrency = "2",
 				clientIdPrefix = "seekOnIdle", containerFactory = "kafkaManualAckListenerContainerFactory")
-		public void listen(@SuppressWarnings("unused") String in, Acknowledgment ack) {
+		public void listen(@SuppressWarnings("unused") String in, Acknowledgement ack) {
 			this.latch3.countDown();
 			this.latch2.countDown();
 			this.latch1.countDown();

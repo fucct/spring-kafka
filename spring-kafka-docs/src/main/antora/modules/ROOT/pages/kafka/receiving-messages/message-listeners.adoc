@@ -15,7 +15,7 @@ public interface MessageListener<K, V> { <1>
 
 public interface AcknowledgingMessageListener<K, V> { <2>
 
-    void onMessage(ConsumerRecord<K, V> data, Acknowledgment acknowledgment);
+    void onMessage(ConsumerRecord<K, V> data, Acknowledgement acknowledgement);
 
 }
 
@@ -27,7 +27,7 @@ public interface ConsumerAwareMessageListener<K, V> extends MessageListener<K, V
 
 public interface AcknowledgingConsumerAwareMessageListener<K, V> extends MessageListener<K, V> { <4>
 
-    void onMessage(ConsumerRecord<K, V> data, Acknowledgment acknowledgment, Consumer<?, ?> consumer);
+    void onMessage(ConsumerRecord<K, V> data, Acknowledgement acknowledgement, Consumer<?, ?> consumer);
 
 }
 
@@ -39,7 +39,7 @@ public interface BatchMessageListener<K, V> { <5>
 
 public interface BatchAcknowledgingMessageListener<K, V> { <6>
 
-    void onMessage(List<ConsumerRecord<K, V>> data, Acknowledgment acknowledgment);
+    void onMessage(List<ConsumerRecord<K, V>> data, Acknowledgement acknowledgement);
 
 }
 
@@ -51,7 +51,7 @@ public interface BatchConsumerAwareMessageListener<K, V> extends BatchMessageLis
 
 public interface BatchAcknowledgingConsumerAwareMessageListener<K, V> extends BatchMessageListener<K, V> { <8>
 
-    void onMessage(List<ConsumerRecord<K, V>> data, Acknowledgment acknowledgment, Consumer<?, ?> consumer);
+    void onMessage(List<ConsumerRecord<K, V>> data, Acknowledgement acknowledgement, Consumer<?, ?> consumer);
 
 }
 ----

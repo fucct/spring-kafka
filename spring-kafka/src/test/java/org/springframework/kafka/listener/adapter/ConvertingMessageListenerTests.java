@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2022 the original author or authors.
+ * Copyright 2016-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ import org.junit.jupiter.api.Test;
 
 import org.springframework.kafka.listener.AcknowledgingConsumerAwareMessageListener;
 import org.springframework.kafka.listener.MessageListener;
-import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.kafka.support.Acknowledgement;
 import org.springframework.kafka.support.SimpleKafkaHeaderMapper;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHeaders;
@@ -97,7 +97,7 @@ class ConvertingMessageListenerTests {
 		convertingMessageListener.onMessage(consumerRecord, null, null);
 
 		verify(delegateListener, times(0)).onMessage(any());
-		verify(delegateListener, times(0)).onMessage(any(), any(Acknowledgment.class));
+		verify(delegateListener, times(0)).onMessage(any(), any(Acknowledgement.class));
 		verify(delegateListener, times(0)).onMessage(any(), any(Consumer.class));
 		verify(delegateListener, times(1)).onMessage(any(), any(), any());
 	}

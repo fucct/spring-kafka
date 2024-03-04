@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2023 the original author or authors.
+ * Copyright 2016-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.springframework.kafka.support.Acknowledgement;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 
 /**
@@ -47,7 +48,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
  * <ul>
  * <li>{@link org.apache.kafka.clients.consumer.ConsumerRecord} to access to the raw Kafka
  * message</li>
- * <li>{@link org.springframework.kafka.support.Acknowledgment} to manually ack</li>
+ * <li>{@link Acknowledgement} to manually ack</li>
  * <li>{@link org.springframework.messaging.handler.annotation.Payload @Payload}-annotated
  * method arguments including the support of validation</li>
  * <li>{@link org.springframework.messaging.handler.annotation.Header @Header}-annotated

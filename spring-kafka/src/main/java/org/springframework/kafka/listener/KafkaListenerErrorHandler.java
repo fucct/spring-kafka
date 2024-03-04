@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 the original author or authors.
+ * Copyright 2017-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package org.springframework.kafka.listener;
 
 import org.apache.kafka.clients.consumer.Consumer;
 
-import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.kafka.support.Acknowledgement;
 import org.springframework.lang.Nullable;
 import org.springframework.messaging.Message;
 
@@ -68,13 +68,13 @@ public interface KafkaListenerErrorHandler {
 	 * @param exception the exception the listener threw, wrapped in a
 	 * {@link ListenerExecutionFailedException}.
 	 * @param consumer the consumer.
-	 * @param ack the {@link Acknowledgment}.
+	 * @param ack the {@link Acknowledgement}.
 	 * @return the return value is ignored unless the annotated method has a
 	 * {@code @SendTo} annotation.
 	 */
 	@Nullable
 	default Object handleError(Message<?> message, ListenerExecutionFailedException exception,
-			Consumer<?, ?> consumer, @Nullable Acknowledgment ack) {
+			Consumer<?, ?> consumer, @Nullable Acknowledgement ack) {
 
 		return handleError(message, exception, consumer);
 	}

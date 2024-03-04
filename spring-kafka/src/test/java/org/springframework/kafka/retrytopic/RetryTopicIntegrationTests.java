@@ -72,7 +72,7 @@ import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
 import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.listener.ContainerProperties.AckMode;
 import org.springframework.kafka.listener.KafkaListenerErrorHandler;
-import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.kafka.support.Acknowledgement;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.kafka.test.EmbeddedKafkaBroker;
 import org.springframework.kafka.test.context.EmbeddedKafka;
@@ -475,7 +475,7 @@ public class RetryTopicIntegrationTests {
 				sameIntervalTopicReuseStrategy = SameIntervalTopicReuseStrategy.MULTIPLE_TOPICS)
 		@KafkaListener(id = "manual", topics = MANUAL_TOPIC, containerFactory = MAIN_TOPIC_CONTAINER_FACTORY)
 		public void listenNoDlt(String message, @Header(KafkaHeaders.RECEIVED_TOPIC) String receivedTopic,
-				@SuppressWarnings("unused") Acknowledgment ack) {
+				@SuppressWarnings("unused") Acknowledgement ack) {
 
 			logger.debug("Message {} received in topic {} ", message, receivedTopic);
 			container.countDownIfNotKnown(receivedTopic, container.countDownLatch6);

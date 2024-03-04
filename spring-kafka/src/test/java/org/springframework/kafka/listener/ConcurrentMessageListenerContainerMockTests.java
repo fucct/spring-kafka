@@ -67,7 +67,7 @@ import org.springframework.kafka.event.ConsumerStartingEvent;
 import org.springframework.kafka.event.ListenerContainerIdleEvent;
 import org.springframework.kafka.listener.ContainerProperties.AckMode;
 import org.springframework.kafka.listener.ContainerProperties.AssignmentCommitOption;
-import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.kafka.support.Acknowledgement;
 import org.springframework.kafka.test.utils.KafkaTestUtils;
 import org.springframework.kafka.transaction.KafkaAwareTransactionManager;
 import org.springframework.lang.Nullable;
@@ -1192,7 +1192,7 @@ public class ConcurrentMessageListenerContainerMockTests {
 		return new AcknowledgingMessageListener() {
 
 			@Override
-			public void onMessage(ConsumerRecord rec, @Nullable Acknowledgment ack) {
+			public void onMessage(ConsumerRecord rec, @Nullable Acknowledgement ack) {
 				if (rec.offset() == 1 && ack != null) {
 					ack.acknowledge();
 				}

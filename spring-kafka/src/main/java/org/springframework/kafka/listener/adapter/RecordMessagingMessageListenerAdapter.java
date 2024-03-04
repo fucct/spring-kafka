@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2023 the original author or authors.
+ * Copyright 2002-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 
 import org.springframework.kafka.listener.AcknowledgingConsumerAwareMessageListener;
 import org.springframework.kafka.listener.KafkaListenerErrorHandler;
-import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.kafka.support.Acknowledgement;
 import org.springframework.kafka.support.converter.ProjectingMessageConverter;
 import org.springframework.lang.Nullable;
 import org.springframework.messaging.Message;
@@ -37,7 +37,7 @@ import org.springframework.messaging.Message;
  * <p>Wraps the incoming Kafka Message to Spring's {@link Message} abstraction.
  *
  * <p>The original {@link ConsumerRecord} and
- * the {@link Acknowledgment} are provided as additional arguments so that these can
+ * the {@link Acknowledgement} are provided as additional arguments so that these can
  * be injected as method arguments if necessary.
  *
  * @param <K> the key type.
@@ -66,16 +66,16 @@ public class RecordMessagingMessageListenerAdapter<K, V> extends MessagingMessag
 	 * <p> Delegate the message to the target listener method,
 	 * with appropriate conversion of the message argument.
 	 * @param record the incoming Kafka {@link ConsumerRecord}.
-	 * @param acknowledgment the acknowledgment.
+	 * @param acknowledgement the acknowledgement.
 	 * @param consumer the consumer.
 	 */
 	@Override
-	public void onMessage(ConsumerRecord<K, V> record, @Nullable Acknowledgment acknowledgment,
+	public void onMessage(ConsumerRecord<K, V> record, @Nullable Acknowledgement acknowledgement,
 			Consumer<?, ?> consumer) {
 
 		Message<?> message;
 		if (isConversionNeeded()) {
-			message = toMessagingMessage(record, acknowledgment, consumer);
+			message = toMessagingMessage(record, acknowledgement, consumer);
 		}
 		else {
 			message = NULL_MESSAGE;
@@ -83,7 +83,7 @@ public class RecordMessagingMessageListenerAdapter<K, V> extends MessagingMessag
 		if (logger.isDebugEnabled() && !(getMessageConverter() instanceof ProjectingMessageConverter)) {
 			this.logger.debug("Processing [" + message + "]");
 		}
-		invoke(record, acknowledgment, consumer, message);
+		invoke(record, acknowledgement, consumer, message);
 	}
 
 }

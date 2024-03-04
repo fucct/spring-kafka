@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 the original author or authors.
+ * Copyright 2023-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
-import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.kafka.support.Acknowledgement;
 import org.springframework.kafka.support.LogIfLevelEnabled;
 import org.springframework.kafka.test.EmbeddedKafkaBroker;
 import org.springframework.kafka.test.context.EmbeddedKafka;
@@ -79,18 +79,18 @@ public class AsyncAckAfterHandleTests {
 
 		@KafkaListener(id = "asaah.id", topics = "asaah")
 		public void onTestTopic(final ConsumerRecord<byte[], byte[]> record,
-				final Acknowledgment acknowledgment) {
-			accept(record, acknowledgment);
+				final Acknowledgement acknowledgement) {
+			accept(record, acknowledgement);
 		}
 
 		private void accept(final ConsumerRecord<byte[], byte[]> record,
-				final Acknowledgment acknowledgment) {
+				final Acknowledgement acknowledgement) {
 			if (record.offset() == 1) {
 				throw new RuntimeException("Exception for error handler");
 			}
 			else {
 				this.latch.countDown();
-				acknowledgment.acknowledge();
+				acknowledgement.acknowledge();
 			}
 		}
 

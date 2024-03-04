@@ -64,7 +64,7 @@ import org.springframework.kafka.config.KafkaListenerEndpointRegistry;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.listener.ContainerProperties.AckMode;
-import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.kafka.support.Acknowledgement;
 import org.springframework.kafka.test.utils.KafkaTestUtils;
 import org.springframework.kafka.transaction.KafkaTransactionManager;
 import org.springframework.test.annotation.DirtiesContext;
@@ -145,7 +145,7 @@ public class ManualNackBatchTxTests {
 		volatile long replayTime;
 
 		@KafkaListener(topics = "foo", groupId = "grp")
-		public void foo(List<String> in, Acknowledgment ack) {
+		public void foo(List<String> in, Acknowledgement ack) {
 			this.contents.add(in);
 			this.replayTime = System.currentTimeMillis() - this.replayTime;
 			this.deliveryLatch.countDown();

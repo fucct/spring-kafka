@@ -50,12 +50,12 @@ It has a sub-interface (`ConsumerAwareListenerErrorHandler`) that has access to 
 Object handleError(Message<?> message, ListenerExecutionFailedException exception, Consumer<?, ?> consumer);
 ----
 
-Another sub-interface (`ManualAckListenerErrorHandler`) provides access to the `Acknowledgment` object when using manual `AckMode`+++s+++.
+Another sub-interface (`ManualAckListenerErrorHandler`) provides access to the `Acknowledgement` object when using manual `AckMode`+++s+++.
 
 [source, java]
 ----
 Object handleError(Message<?> message, ListenerExecutionFailedException exception,
-			Consumer<?, ?> consumer, @Nullable Acknowledgment ack);
+			Consumer<?, ?> consumer, @Nullable Acknowledgement ack);
 ----
 
 In either case, you should NOT perform any seeks on the consumer because the container would be unaware of them.

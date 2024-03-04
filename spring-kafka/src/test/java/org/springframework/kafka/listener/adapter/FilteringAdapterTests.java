@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2019 the original author or authors.
+ * Copyright 2017-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.kafka.listener.BatchAcknowledgingMessageListener;
-import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.kafka.support.Acknowledgement;
 
 /**
  * @author Gary Russell
@@ -52,8 +52,8 @@ public class FilteringAdapterTests {
 		willAnswer(i -> {
 			latch.countDown();
 			return null;
-		}).given(listener).onMessage(any(List.class), any(Acknowledgment.class));
-		Acknowledgment ack = mock(Acknowledgment.class);
+		}).given(listener).onMessage(any(List.class), any(Acknowledgement.class));
+		Acknowledgement ack = mock(Acknowledgement.class);
 		adapter.onMessage(consumerRecords, ack, null);
 		assertThat(latch.await(10, TimeUnit.SECONDS)).isTrue();
 		verify(ack, never()).acknowledge();
@@ -69,7 +69,7 @@ public class FilteringAdapterTests {
 		final CountDownLatch latch = new CountDownLatch(1);
 		adapter.onMessage(consumerRecords, () -> latch.countDown(), null);
 		assertThat(latch.await(10, TimeUnit.SECONDS)).isTrue();
-		verify(listener, never()).onMessage(any(List.class), any(Acknowledgment.class));
+		verify(listener, never()).onMessage(any(List.class), any(Acknowledgement.class));
 	}
 
 }

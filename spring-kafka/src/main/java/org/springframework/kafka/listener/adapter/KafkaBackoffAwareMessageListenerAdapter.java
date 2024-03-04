@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2023 the original author or authors.
+ * Copyright 2018-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ import org.springframework.kafka.listener.KafkaConsumerBackoffManager;
 import org.springframework.kafka.listener.MessageListener;
 import org.springframework.kafka.listener.TimestampedException;
 import org.springframework.kafka.retrytopic.RetryTopicHeaders;
-import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.kafka.support.Acknowledgement;
 import org.springframework.lang.Nullable;
 
 /**
@@ -88,23 +88,23 @@ public class KafkaBackoffAwareMessageListenerAdapter<K, V>
 	}
 
 	@Override
-	public void onMessage(ConsumerRecord<K, V> consumerRecord, @Nullable Acknowledgment acknowledgment,
+	public void onMessage(ConsumerRecord<K, V> consumerRecord, @Nullable Acknowledgement acknowledgement,
 								@Nullable Consumer<?, ?> consumer) {
 		maybeGetBackoffTimestamp(consumerRecord)
 				.ifPresent(nextExecutionTimestamp -> this.kafkaConsumerBackoffManager
 						.backOffIfNecessary(createContext(consumerRecord, nextExecutionTimestamp, consumer)));
 		try {
-			invokeDelegateOnMessage(consumerRecord, acknowledgment, consumer);
+			invokeDelegateOnMessage(consumerRecord, acknowledgement, consumer);
 		}
 		catch (Exception ex) {
 			throw new TimestampedException(ex, Instant.now(this.clock));
 		}
 	}
 
-	private void invokeDelegateOnMessage(ConsumerRecord<K, V> consumerRecord, Acknowledgment acknowledgment, Consumer<?, ?> consumer) {
+	private void invokeDelegateOnMessage(ConsumerRecord<K, V> consumerRecord, Acknowledgement acknowledgement, Consumer<?, ?> consumer) {
 		switch (this.delegateType) {
-			case ACKNOWLEDGING_CONSUMER_AWARE -> this.delegate.onMessage(consumerRecord, acknowledgment, consumer);
-			case ACKNOWLEDGING -> this.delegate.onMessage(consumerRecord, acknowledgment);
+			case ACKNOWLEDGING_CONSUMER_AWARE -> this.delegate.onMessage(consumerRecord, acknowledgement, consumer);
+			case ACKNOWLEDGING -> this.delegate.onMessage(consumerRecord, acknowledgement);
 			case CONSUMER_AWARE -> this.delegate.onMessage(consumerRecord, consumer);
 			case SIMPLE -> this.delegate.onMessage(consumerRecord);
 		}
@@ -135,8 +135,8 @@ public class KafkaBackoffAwareMessageListenerAdapter<K, V>
 	}
 
 	@Override
-	public void onMessage(ConsumerRecord<K, V> data, Acknowledgment acknowledgment) {
-		onMessage(data, acknowledgment, null); // NOSONAR
+	public void onMessage(ConsumerRecord<K, V> data, Acknowledgement acknowledgement) {
+		onMessage(data, acknowledgement, null); // NOSONAR
 	}
 
 	@Override

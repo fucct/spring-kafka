@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2023 the original author or authors.
+ * Copyright 2016-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ import org.apache.kafka.common.header.internals.RecordHeaders;
 
 import org.springframework.core.log.LogAccessor;
 import org.springframework.kafka.support.AbstractKafkaHeaderMapper;
-import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.kafka.support.Acknowledgement;
 import org.springframework.kafka.support.DefaultKafkaHeaderMapper;
 import org.springframework.kafka.support.JacksonPresent;
 import org.springframework.kafka.support.KafkaHeaderMapper;
@@ -149,14 +149,14 @@ public class MessagingMessageConverter implements RecordMessageConverter {
 	 * IMPORTANT: This converter's {@link #fromMessage(Message, String)} method is called
 	 * for outbound conversion to a {@link ProducerRecord} with the message payload in the
 	 * {@link ProducerRecord#value()} property.
-	 * {@link #toMessage(ConsumerRecord, Acknowledgment, Consumer, Type)} is called for
+	 * {@link #toMessage(ConsumerRecord, Acknowledgement, Consumer, Type)} is called for
 	 * inbound conversion from {@link ConsumerRecord} with the payload being the
 	 * {@link ConsumerRecord#value()} property.
 	 * <p>
 	 * The {@link SmartMessageConverter#toMessage(Object, MessageHeaders)} method is
 	 * called to create a new outbound {@link Message} from the {@link Message} passed to
 	 * {@link #fromMessage(Message, String)}. Similarly, in
-	 * {@link #toMessage(ConsumerRecord, Acknowledgment, Consumer, Type)}, after this
+	 * {@link #toMessage(ConsumerRecord, Acknowledgement, Consumer, Type)}, after this
 	 * converter has created a new {@link Message} from the {@link ConsumerRecord} the
 	 * {@link SmartMessageConverter#fromMessage(Message, Class)} method is called and then
 	 * the final inbound message is created with the newly converted payload.
@@ -174,8 +174,8 @@ public class MessagingMessageConverter implements RecordMessageConverter {
 	}
 
 	@Override
-	public Message<?> toMessage(ConsumerRecord<?, ?> record, Acknowledgment acknowledgment, Consumer<?, ?> consumer,
-			Type type) {
+	public Message<?> toMessage(ConsumerRecord<?, ?> record, Acknowledgement acknowledgement, Consumer<?, ?> consumer,
+                                Type type) {
 
 		KafkaMessageHeaders kafkaMessageHeaders = new KafkaMessageHeaders(this.generateMessageId,
 				this.generateTimestamp);
@@ -185,7 +185,7 @@ public class MessagingMessageConverter implements RecordMessageConverter {
 			mapOrAddHeaders(record, rawHeaders);
 		}
 		String ttName = record.timestampType() != null ? record.timestampType().name() : null;
-		commonHeaders(acknowledgment, consumer, rawHeaders, record.key(), record.topic(), record.partition(),
+		commonHeaders(acknowledgement, consumer, rawHeaders, record.key(), record.topic(), record.partition(),
 				record.offset(), ttName, record.timestamp());
 		if (this.rawRecordHeader) {
 			rawHeaders.put(KafkaHeaders.RAW_DATA, record);

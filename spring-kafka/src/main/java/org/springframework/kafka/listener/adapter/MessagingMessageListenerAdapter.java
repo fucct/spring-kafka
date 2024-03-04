@@ -51,7 +51,7 @@ import org.springframework.kafka.listener.ConsumerSeekAware;
 import org.springframework.kafka.listener.KafkaListenerErrorHandler;
 import org.springframework.kafka.listener.ListenerExecutionFailedException;
 import org.springframework.kafka.listener.MessageListener;
-import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.kafka.support.Acknowledgement;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.kafka.support.KafkaNull;
 import org.springframework.kafka.support.KafkaUtils;
@@ -95,7 +95,7 @@ public abstract class MessagingMessageListenerAdapter<K, V> implements ConsumerS
 
 	private static final SpelExpressionParser PARSER = new SpelExpressionParser();
 
-	private static final Acknowledgment NO_OP_ACK = new NoOpAck();
+	private static final Acknowledgement NO_OP_ACK = new NoOpAck();
 
 	/**
 	 * Message used when no conversion is needed.
@@ -372,22 +372,22 @@ public abstract class MessagingMessageListenerAdapter<K, V> implements ConsumerS
 		}
 	}
 
-	protected Message<?> toMessagingMessage(ConsumerRecord<K, V> cRecord, @Nullable Acknowledgment acknowledgment,
+	protected Message<?> toMessagingMessage(ConsumerRecord<K, V> cRecord, @Nullable Acknowledgement acknowledgement,
 			Consumer<?, ?> consumer) {
-		return getMessageConverter().toMessage(cRecord, acknowledgment, consumer, getType());
+		return getMessageConverter().toMessage(cRecord, acknowledgement, consumer, getType());
 	}
 
-	protected void invoke(Object records, @Nullable Acknowledgment acknowledgment, Consumer<?, ?> consumer,
-			final Message<?> message) {
+	protected void invoke(Object records, @Nullable Acknowledgement acknowledgement, Consumer<?, ?> consumer,
+                          final Message<?> message) {
 
 		try {
-			Object result = invokeHandler(records, acknowledgment, message, consumer);
+			Object result = invokeHandler(records, acknowledgement, message, consumer);
 			if (result != null) {
-				handleResult(result, records, acknowledgment, consumer, message);
+				handleResult(result, records, acknowledgement, consumer, message);
 			}
 		}
 		catch (ListenerExecutionFailedException e) { // NOSONAR ex flow control
-			handleException(records, acknowledgment, consumer, message, e);
+			handleException(records, acknowledgement, consumer, message, e);
 		}
 	}
 
@@ -395,15 +395,15 @@ public abstract class MessagingMessageListenerAdapter<K, V> implements ConsumerS
 	 * Invoke the handler, wrapping any exception to a {@link ListenerExecutionFailedException}
 	 * with a dedicated error message.
 	 * @param data the data to process during invocation.
-	 * @param acknowledgment the acknowledgment to use if any.
+	 * @param acknowledgement the acknowledgement to use if any.
 	 * @param message the message to process.
 	 * @param consumer the consumer.
 	 * @return the result of invocation.
 	 */
-	protected final Object invokeHandler(Object data, @Nullable Acknowledgment acknowledgment, Message<?> message,
-			Consumer<?, ?> consumer) {
+	protected final Object invokeHandler(Object data, @Nullable Acknowledgement acknowledgement, Message<?> message,
+                                         Consumer<?, ?> consumer) {
 
-		Acknowledgment ack = acknowledgment;
+		Acknowledgement ack = acknowledgement;
 		if (ack == null && this.noOpAck) {
 			ack = NO_OP_ACK;
 		}
@@ -436,11 +436,11 @@ public abstract class MessagingMessageListenerAdapter<K, V> implements ConsumerS
 		}
 	}
 
-	private RuntimeException checkAckArg(@Nullable Acknowledgment acknowledgment, Message<?> message, Exception ex) {
-		if (this.hasAckParameter && acknowledgment == null) {
+	private RuntimeException checkAckArg(@Nullable Acknowledgement acknowledgement, Message<?> message, Exception ex) {
+		if (this.hasAckParameter && acknowledgement == null) {
 			return new ListenerExecutionFailedException("invokeHandler Failed",
-					new IllegalStateException("No Acknowledgment available as an argument, "
-							+ "the listener container must have a MANUAL AckMode to populate the Acknowledgment.",
+					new IllegalStateException("No Acknowledgement available as an argument, "
+							+ "the listener container must have a MANUAL AckMode to populate the Acknowledgement.",
 							ex));
 		}
 		return new ListenerExecutionFailedException(createMessagingErrorMessage("Listener method could not " +
@@ -452,12 +452,12 @@ public abstract class MessagingMessageListenerAdapter<K, V> implements ConsumerS
 	 * response message to the SendTo topic.
 	 * @param resultArg the result object to handle (never <code>null</code>)
 	 * @param request the original request message
-	 * @param acknowledgment the acknowledgment to manual ack
+	 * @param acknowledgement the acknowledgement to manual ack
 	 * @param consumer the consumer to handler error
 	 * @param source the source data for the method invocation - e.g.
 	 * {@code o.s.messaging.Message<?>}; may be null
 	 */
-	protected void handleResult(Object resultArg, Object request, @Nullable Acknowledgment acknowledgment,
+	protected void handleResult(Object resultArg, Object request, @Nullable Acknowledgement acknowledgement,
 			Consumer<?, ?> consumer, @Nullable Message<?> source) {
 
 		this.logger.debug(() -> "Listener method returned result [" + resultArg
@@ -474,29 +474,29 @@ public abstract class MessagingMessageListenerAdapter<K, V> implements ConsumerS
 				this.messageReturnType;
 
 		if (result instanceof CompletableFuture<?> completable) {
-			if (acknowledgment == null || !acknowledgment.isOutOfOrderCommit()) {
-				this.logger.warn("Container 'Acknowledgment' must be async ack for Future<?> return type; "
+			if (acknowledgement == null || !acknowledgement.isOutOfOrderCommit()) {
+				this.logger.warn("Container 'Acknowledgement' must be async ack for Future<?> return type; "
 						+ "otherwise the container will ack the message immediately");
 			}
 			completable.whenComplete((r, t) -> {
 				if (t == null) {
 					asyncSuccess(r, replyTopic, source, messageReturnType);
-					acknowledge(acknowledgment);
+					acknowledge(acknowledgement);
 				}
 				else {
-					asyncFailure(request, acknowledgment, consumer, t, source);
+					asyncFailure(request, acknowledgement, consumer, t, source);
 				}
 			});
 		}
 		else if (monoPresent && result instanceof Mono<?> mono) {
-			if (acknowledgment == null || !acknowledgment.isOutOfOrderCommit()) {
-				this.logger.warn("Container 'Acknowledgment' must be async ack for Mono<?> return type " +
+			if (acknowledgement == null || !acknowledgement.isOutOfOrderCommit()) {
+				this.logger.warn("Container 'Acknowledgement' must be async ack for Mono<?> return type " +
 						"(or Kotlin suspend function); otherwise the container will ack the message immediately");
 			}
 			mono.subscribe(
 					r -> asyncSuccess(r, replyTopic, source, messageReturnType),
-					t -> asyncFailure(request, acknowledgment, consumer, t, source),
-					() -> acknowledge(acknowledgment)
+					t -> asyncFailure(request, acknowledgement, consumer, t, source),
+					() -> acknowledge(acknowledgement)
 			);
 		}
 		else {
@@ -654,39 +654,39 @@ public abstract class MessagingMessageListenerAdapter<K, V> implements ConsumerS
 		}
 	}
 
-	protected void acknowledge(@Nullable Acknowledgment acknowledgment) {
-		if (acknowledgment != null) {
-			acknowledgment.acknowledge();
+	protected void acknowledge(@Nullable Acknowledgement acknowledgement) {
+		if (acknowledgement != null) {
+			acknowledgement.acknowledge();
 		}
 	}
 
-	protected void asyncFailure(Object request, @Nullable Acknowledgment acknowledgment, Consumer<?, ?> consumer,
-			Throwable t, Message<?> source) {
+	protected void asyncFailure(Object request, @Nullable Acknowledgement acknowledgement, Consumer<?, ?> consumer,
+                                Throwable t, Message<?> source) {
 
 		try {
-			handleException(request, acknowledgment, consumer, source,
+			handleException(request, acknowledgement, consumer, source,
 					new ListenerExecutionFailedException(createMessagingErrorMessage(
 							"Async Fail", source.getPayload()), t));
 		}
 		catch (Throwable ex) {
 			this.logger.error(t, () -> "Future, Mono, or suspend function was completed with an exception for " + source);
-			acknowledge(acknowledgment);
+			acknowledge(acknowledgement);
 		}
 	}
 
-	protected void handleException(Object records, @Nullable Acknowledgment acknowledgment, Consumer<?, ?> consumer,
-			Message<?> message, ListenerExecutionFailedException e) {
+	protected void handleException(Object records, @Nullable Acknowledgement acknowledgement, Consumer<?, ?> consumer,
+                                   Message<?> message, ListenerExecutionFailedException e) {
 
 		if (this.errorHandler != null) {
 			try {
 				if (NULL_MESSAGE.equals(message)) {
 					message = new GenericMessage<>(records);
 				}
-				Object errorResult = this.errorHandler.handleError(message, e, consumer, acknowledgment);
+				Object errorResult = this.errorHandler.handleError(message, e, consumer, acknowledgement);
 				if (errorResult != null && !(errorResult instanceof InvocationResult)) {
 					Object result = this.handlerMethod.getInvocationResultFor(errorResult, message.getPayload());
 					handleResult(Objects.requireNonNullElse(result, errorResult),
-							records, acknowledgment, consumer, message);
+							records, acknowledgement, consumer, message);
 				}
 			}
 			catch (Exception ex) {
@@ -755,7 +755,7 @@ public abstract class MessagingMessageListenerAdapter<K, V> implements ConsumerS
 			 */
 			Type parameterType = methodParameter.getGenericParameterType();
 			boolean isNotConvertible = parameterIsType(parameterType, ConsumerRecord.class);
-			boolean isAck = parameterIsType(parameterType, Acknowledgment.class);
+			boolean isAck = parameterIsType(parameterType, Acknowledgement.class);
 			this.hasAckParameter |= isAck;
 			if (isAck) {
 				this.noOpAck |= methodParameter.getParameterAnnotation(NonNull.class) != null;
@@ -794,7 +794,7 @@ public abstract class MessagingMessageListenerAdapter<K, V> implements ConsumerS
 		boolean validParametersForBatch = method.getGenericParameterTypes().length <= allowedBatchParameters;
 		if (!validParametersForBatch) {
 			String stateMessage = "A parameter of type '%s' must be the only parameter "
-					+ "(except for an optional 'Acknowledgment' and/or 'Consumer' "
+					+ "(except for an optional 'Acknowledgement' and/or 'Consumer' "
 					+ "and/or '@Header(KafkaHeaders.GROUP_ID) String groupId'";
 			Assert.state(!this.isConsumerRecords,
 					() -> String.format(stateMessage, "ConsumerRecords"));
@@ -870,7 +870,7 @@ public abstract class MessagingMessageListenerAdapter<K, V> implements ConsumerS
 	public record ReplyExpressionRoot(Object request, Object source, Object result) {
 	}
 
-	static class NoOpAck implements Acknowledgment {
+	static class NoOpAck implements Acknowledgement {
 
 		@Override
 		public void acknowledge() {

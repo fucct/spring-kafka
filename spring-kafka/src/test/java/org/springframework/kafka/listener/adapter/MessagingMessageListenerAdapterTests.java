@@ -34,7 +34,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.kafka.annotation.KafkaListenerAnnotationBeanPostProcessor;
 import org.springframework.kafka.listener.AcknowledgingMessageListener;
 import org.springframework.kafka.listener.ListenerExecutionFailedException;
-import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.kafka.support.Acknowledgement;
 import org.springframework.kafka.support.converter.RecordMessageConverter;
 import org.springframework.messaging.support.GenericMessage;
 
@@ -57,8 +57,8 @@ public class MessagingMessageListenerAdapterTests {
 			}
 
 			@Override
-			public void onMessage(ConsumerRecord<String, String> data, Acknowledgment acknowledgment) {
-				toMessagingMessage(data, acknowledgment, null);
+			public void onMessage(ConsumerRecord<String, String> data, Acknowledgement acknowledgement) {
+				toMessagingMessage(data, acknowledgement, null);
 			}
 
 		}
@@ -66,7 +66,7 @@ public class MessagingMessageListenerAdapterTests {
 		adapter.setFallbackType(String.class);
 		RecordMessageConverter converter = mock(RecordMessageConverter.class);
 		ConsumerRecord<String, String> cr = new ConsumerRecord<>("foo", 1, 1L, null, null);
-		Acknowledgment ack = mock(Acknowledgment.class);
+		Acknowledgement ack = mock(Acknowledgement.class);
 		willReturn(new GenericMessage<>("foo")).given(converter).toMessage(cr, ack, null, String.class);
 		adapter.setMessageConverter(converter);
 		adapter.onMessage(cr, ack);
@@ -76,14 +76,14 @@ public class MessagingMessageListenerAdapterTests {
 	@Test
 	public void testCompletableFutureReturn() throws NoSuchMethodException {
 
-		Method method = getClass().getDeclaredMethod("future", String.class, Acknowledgment.class);
+		Method method = getClass().getDeclaredMethod("future", String.class, Acknowledgement.class);
 		testAsyncResult(method, "bar");
 	}
 
 	@Test
 	public void testMonoReturn() throws NoSuchMethodException {
 
-		Method method = getClass().getDeclaredMethod("mono", String.class, Acknowledgment.class);
+		Method method = getClass().getDeclaredMethod("mono", String.class, Acknowledgement.class);
 		testAsyncResult(method, "baz");
 	}
 
@@ -95,7 +95,7 @@ public class MessagingMessageListenerAdapterTests {
 		adapter.setHandlerMethod(
 				new HandlerAdapter(bpp.getMessageHandlerMethodFactory().createInvocableHandlerMethod(this, method)));
 		ConsumerRecord<String, String> cr = new ConsumerRecord<>(topic, 0, 0L, null, "foo");
-		Acknowledgment ack = mock(Acknowledgment.class);
+		Acknowledgement ack = mock(Acknowledgement.class);
 		RecordMessageConverter converter = mock(RecordMessageConverter.class);
 		willReturn(new GenericMessage<>("foo")).given(converter).toMessage(cr, ack, null, String.class);
 		adapter.setMessageConverter(converter);
@@ -107,7 +107,7 @@ public class MessagingMessageListenerAdapterTests {
 	@Test
 	void testMissingAck() throws NoSuchMethodException, SecurityException {
 		KafkaListenerAnnotationBeanPostProcessor<String, String> bpp = new KafkaListenerAnnotationBeanPostProcessor<>();
-		Method method = getClass().getDeclaredMethod("test", Acknowledgment.class);
+		Method method = getClass().getDeclaredMethod("test", Acknowledgement.class);
 		RecordMessagingMessageListenerAdapter<String, String> adapter =
 				new RecordMessagingMessageListenerAdapter<>(this, method);
 		adapter.setHandlerMethod(
@@ -118,16 +118,16 @@ public class MessagingMessageListenerAdapterTests {
 				.withStackTraceContaining("MANUAL");
 	}
 
-	public void test(Acknowledgment ack) {
+	public void test(Acknowledgement ack) {
 
 	}
 
-	public CompletableFuture<String> future(String data, Acknowledgment ack) {
+	public CompletableFuture<String> future(String data, Acknowledgement ack) {
 
 		return CompletableFuture.completedFuture("processed" + data);
 	}
 
-	public Mono<String> mono(String data, Acknowledgment ack) {
+	public Mono<String> mono(String data, Acknowledgement ack) {
 
 		return Mono.just(data);
 	}

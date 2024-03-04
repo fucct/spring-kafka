@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2023 the original author or authors.
+ * Copyright 2016-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 
 import org.springframework.kafka.listener.AcknowledgingConsumerAwareMessageListener;
 import org.springframework.kafka.listener.MessageListener;
-import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.kafka.support.Acknowledgement;
 import org.springframework.lang.Nullable;
 
 /**
@@ -65,27 +65,27 @@ public class FilteringMessageListenerAdapter<K, V>
 	}
 
 	@Override
-	public void onMessage(ConsumerRecord<K, V> consumerRecord, @Nullable Acknowledgment acknowledgment,
+	public void onMessage(ConsumerRecord<K, V> consumerRecord, @Nullable Acknowledgement acknowledgement,
 			Consumer<?, ?> consumer) {
 
 		if (!filter(consumerRecord)) {
 			switch (this.delegateType) {
-				case ACKNOWLEDGING_CONSUMER_AWARE -> this.delegate.onMessage(consumerRecord, acknowledgment, consumer);
-				case ACKNOWLEDGING -> this.delegate.onMessage(consumerRecord, acknowledgment);
+				case ACKNOWLEDGING_CONSUMER_AWARE -> this.delegate.onMessage(consumerRecord, acknowledgement, consumer);
+				case ACKNOWLEDGING -> this.delegate.onMessage(consumerRecord, acknowledgement);
 				case CONSUMER_AWARE -> this.delegate.onMessage(consumerRecord, consumer);
 				case SIMPLE -> this.delegate.onMessage(consumerRecord);
 			}
 		}
 		else {
-			ackFilteredIfNecessary(acknowledgment);
+			ackFilteredIfNecessary(acknowledgement);
 		}
 	}
 
-	private void ackFilteredIfNecessary(@Nullable Acknowledgment acknowledgment) {
+	private void ackFilteredIfNecessary(@Nullable Acknowledgement acknowledgement) {
 		switch (this.delegateType) {
 			case ACKNOWLEDGING_CONSUMER_AWARE, ACKNOWLEDGING -> {
-				if (this.ackDiscarded && acknowledgment != null) {
-					acknowledgment.acknowledge();
+				if (this.ackDiscarded && acknowledgement != null) {
+					acknowledgement.acknowledge();
 				}
 			}
 			case CONSUMER_AWARE, SIMPLE -> {
@@ -104,8 +104,8 @@ public class FilteringMessageListenerAdapter<K, V>
 	}
 
 	@Override
-	public void onMessage(ConsumerRecord<K, V> data, Acknowledgment acknowledgment) {
-		onMessage(data, acknowledgment, null); // NOSONAR
+	public void onMessage(ConsumerRecord<K, V> data, Acknowledgement acknowledgement) {
+		onMessage(data, acknowledgement, null); // NOSONAR
 	}
 
 	@Override

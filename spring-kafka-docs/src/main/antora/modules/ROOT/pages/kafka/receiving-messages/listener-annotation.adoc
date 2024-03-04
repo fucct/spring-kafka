@@ -150,17 +150,17 @@ public void listen(ConsumerRecord<?, ?> record) {
 
 The initial offset will be applied to all 6 partitions.
 
-[[manual-acknowledgment]]
-== Manual Acknowledgment
+[[manual-acknowledgement]]
+== Manual Acknowledgement
 
-When using manual `AckMode`, you can also provide the listener with the `Acknowledgment`.
+When using manual `AckMode`, you can also provide the listener with the `Acknowledgement`.
 The following example also shows how to use a different container factory.
 
 [source, java]
 ----
 @KafkaListener(id = "cat", topics = "myTopic",
           containerFactory = "kafkaManualAckListenerContainerFactory")
-public void listen(String data, Acknowledgment ack) {
+public void listen(String data, Acknowledgement ack) {
     ...
     ack.acknowledge();
 }
@@ -264,7 +264,7 @@ public void listen(List<String> list,
 }
 ----
 
-Alternatively, you can receive a `List` of `Message<?>` objects with each offset and other details in each message, but it must be the only parameter (aside from optional `Acknowledgment`, when using manual commits, and/or `Consumer<?, ?>` parameters) defined on the method.
+Alternatively, you can receive a `List` of `Message<?>` objects with each offset and other details in each message, but it must be the only parameter (aside from optional `Acknowledgement`, when using manual commits, and/or `Consumer<?, ?>` parameters) defined on the method.
 The following example shows how to do so:
 
 [source, java]
@@ -275,12 +275,12 @@ public void listen1(List<Message<?>> list) {
 }
 
 @KafkaListener(id = "listMsgAck", topics = "myTopic", containerFactory = "batchFactory")
-public void listen2(List<Message<?>> list, Acknowledgment ack) {
+public void listen2(List<Message<?>> list, Acknowledgement ack) {
     ...
 }
 
 @KafkaListener(id = "listMsgAckConsumer", topics = "myTopic", containerFactory = "batchFactory")
-public void listen3(List<Message<?>> list, Acknowledgment ack, Consumer<?, ?> consumer) {
+public void listen3(List<Message<?>> list, Acknowledgement ack, Consumer<?, ?> consumer) {
     ...
 }
 ----
@@ -290,7 +290,7 @@ No conversion is performed on the payloads in this case.
 If the `BatchMessagingMessageConverter` is configured with a `RecordMessageConverter`, you can also add a generic type to the `Message` parameter and the payloads are converted.
 See xref:kafka/serdes.adoc#payload-conversion-with-batch[Payload Conversion with Batch Listeners] for more information.
 
-You can also receive a list of `ConsumerRecord<?, ?>` objects, but it must be the only parameter (aside from optional `Acknowledgment`, when using manual commits and `Consumer<?, ?>` parameters) defined on the method.
+You can also receive a list of `ConsumerRecord<?, ?>` objects, but it must be the only parameter (aside from optional `Acknowledgement`, when using manual commits and `Consumer<?, ?>` parameters) defined on the method.
 The following example shows how to do so:
 
 [source, java]
@@ -301,13 +301,13 @@ public void listen(List<ConsumerRecord<Integer, String>> list) {
 }
 
 @KafkaListener(id = "listCRsAck", topics = "myTopic", containerFactory = "batchFactory")
-public void listen(List<ConsumerRecord<Integer, String>> list, Acknowledgment ack) {
+public void listen(List<ConsumerRecord<Integer, String>> list, Acknowledgement ack) {
     ...
 }
 ----
 
 Starting with version 2.2, the listener can receive the complete `ConsumerRecords<?, ?>` object returned by the `poll()` method, letting the listener access additional methods, such as `partitions()` (which returns the `TopicPartition` instances in the list) and `records(TopicPartition)` (which gets selective records).
-Again, this must be the only parameter (aside from optional `Acknowledgment`, when using manual commits or `Consumer<?, ?>` parameters) on the method.
+Again, this must be the only parameter (aside from optional `Acknowledgement`, when using manual commits or `Consumer<?, ?>` parameters) on the method.
 The following example shows how to do so:
 
 [source, java]

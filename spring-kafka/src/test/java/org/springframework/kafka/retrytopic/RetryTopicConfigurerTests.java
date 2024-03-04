@@ -49,7 +49,7 @@ import org.springframework.kafka.config.KafkaListenerContainerFactory;
 import org.springframework.kafka.config.KafkaListenerEndpointRegistrar;
 import org.springframework.kafka.config.MethodKafkaListenerEndpoint;
 import org.springframework.kafka.config.MultiMethodKafkaListenerEndpoint;
-import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.kafka.support.Acknowledgement;
 import org.springframework.kafka.support.EndpointHandlerMethod;
 import org.springframework.kafka.test.condition.LogLevels;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -353,7 +353,7 @@ class RetryTopicConfigurerTests {
 	void shouldLogConsumerRecordMessage() {
 		RetryTopicConfigurer.LoggingDltListenerHandlerMethod method =
 				new RetryTopicConfigurer.LoggingDltListenerHandlerMethod();
-		method.logMessage(consumerRecordMessage, mock(Acknowledgment.class));
+		method.logMessage(consumerRecordMessage, mock(Acknowledgement.class));
 		then(consumerRecordMessage).should().topic();
 	}
 
@@ -361,7 +361,7 @@ class RetryTopicConfigurerTests {
 	void shouldNotLogObjectMessage() {
 		RetryTopicConfigurer.LoggingDltListenerHandlerMethod method =
 				new RetryTopicConfigurer.LoggingDltListenerHandlerMethod();
-		method.logMessage(objectMessage, mock(Acknowledgment.class));
+		method.logMessage(objectMessage, mock(Acknowledgement.class));
 		then(objectMessage).shouldHaveNoInteractions();
 	}
 

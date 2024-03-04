@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 
-import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.kafka.support.Acknowledgement;
 import org.springframework.lang.Nullable;
 
 /**
@@ -45,11 +45,11 @@ public interface BatchMessageListener<K, V> extends GenericMessageListener<List<
 	 * Listener receives the original {@link ConsumerRecords} object instead of a
 	 * list of {@link ConsumerRecord}.
 	 * @param records the records.
-	 * @param acknowledgment the acknowledgment (null if not manual acks)
+	 * @param acknowledgement the acknowledgement (null if not manual acks)
 	 * @param consumer the consumer.
 	 * @since 2.2
 	 */
-	default void onMessage(ConsumerRecords<K, V> records, @Nullable Acknowledgment acknowledgment,
+	default void onMessage(ConsumerRecords<K, V> records, @Nullable Acknowledgement acknowledgement,
 			Consumer<K, V> consumer) {
 		throw new UnsupportedOperationException("This batch listener doesn't support ConsumerRecords");
 	}

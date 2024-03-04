@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2021 the original author or authors.
+ * Copyright 2016-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.listener.BatchAcknowledgingConsumerAwareMessageListener;
 import org.springframework.kafka.listener.BatchMessageListener;
 import org.springframework.kafka.listener.ListenerType;
-import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.kafka.support.Acknowledgement;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
@@ -74,7 +74,7 @@ public class FilteringBatchMessageListenerAdapter<K, V>
 	}
 
 	@Override
-	public void onMessage(List<ConsumerRecord<K, V>> records, @Nullable Acknowledgment acknowledgment,
+	public void onMessage(List<ConsumerRecord<K, V>> records, @Nullable Acknowledgement acknowledgement,
 			Consumer<?, ?> consumer) {
 
 		List<ConsumerRecord<K, V>> consumerRecords = getRecordFilterStrategy().filterBatch(records);
@@ -83,27 +83,27 @@ public class FilteringBatchMessageListenerAdapter<K, V>
 						|| this.delegateType.equals(ListenerType.CONSUMER_AWARE);
 		/*
 		 *  An empty list goes to the listener if ackDiscarded is false and the listener can ack
-		 *  either through the acknowledgment
+		 *  either through the acknowledgement
 		 */
 		if (consumerRecords.size() > 0 || consumerAware
 				|| (!this.ackDiscarded && this.delegateType.equals(ListenerType.ACKNOWLEDGING))) {
-			invokeDelegate(consumerRecords, acknowledgment, consumer);
+			invokeDelegate(consumerRecords, acknowledgement, consumer);
 		}
 		else {
-			if (this.ackDiscarded && acknowledgment != null) {
-				acknowledgment.acknowledge();
+			if (this.ackDiscarded && acknowledgement != null) {
+				acknowledgement.acknowledge();
 			}
 		}
 	}
 
-	private void invokeDelegate(List<ConsumerRecord<K, V>> consumerRecords, Acknowledgment acknowledgment,
+	private void invokeDelegate(List<ConsumerRecord<K, V>> consumerRecords, Acknowledgement acknowledgement,
 			Consumer<?, ?> consumer) {
 		switch (this.delegateType) {
 			case ACKNOWLEDGING_CONSUMER_AWARE:
-				this.delegate.onMessage(consumerRecords, acknowledgment, consumer);
+				this.delegate.onMessage(consumerRecords, acknowledgement, consumer);
 				break;
 			case ACKNOWLEDGING:
-				this.delegate.onMessage(consumerRecords, acknowledgment);
+				this.delegate.onMessage(consumerRecords, acknowledgement);
 				break;
 			case CONSUMER_AWARE:
 				this.delegate.onMessage(consumerRecords, consumer);
@@ -124,8 +124,8 @@ public class FilteringBatchMessageListenerAdapter<K, V>
 	}
 
 	@Override
-	public void onMessage(List<ConsumerRecord<K, V>> data, Acknowledgment acknowledgment) {
-		onMessage(data, acknowledgment, null); // NOSONAR
+	public void onMessage(List<ConsumerRecord<K, V>> data, Acknowledgement acknowledgement) {
+		onMessage(data, acknowledgement, null); // NOSONAR
 	}
 
 	@Override

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2023 the original author or authors.
+ * Copyright 2023-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.ProducerFactory;
-import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.kafka.support.Acknowledgement;
 import org.springframework.kafka.test.EmbeddedKafkaBroker;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.kafka.test.utils.KafkaTestUtils;
@@ -155,7 +155,7 @@ public class PauseContainerWhileErrorHandlerIsRetryingTests {
 
 
 		@KafkaListener(id = "id", groupId = "grp", topics = "foo")
-		public void process(List<String> batch, Acknowledgment acknowledgment) {
+		public void process(List<String> batch, Acknowledgement acknowledgement) {
 			batch.forEach((msg) -> {
 				if (!received.contains(msg)) {
 					log("Got new message: " + msg);
@@ -172,7 +172,7 @@ public class PauseContainerWhileErrorHandlerIsRetryingTests {
 				}
 				processed.add(msg);
 			});
-			acknowledgment.acknowledge();
+			acknowledgement.acknowledge();
 		}
 
 		/**

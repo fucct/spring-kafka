@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 the original author or authors.
+ * Copyright 2020-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 
 import org.springframework.core.log.LogAccessor;
 import org.springframework.kafka.listener.ConsumerRecordRecoverer;
-import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.kafka.support.Acknowledgement;
 import org.springframework.messaging.Message;
 import org.springframework.util.Assert;
 
@@ -62,7 +62,7 @@ public class DefaultBatchToRecordAdapter<K, V> implements BatchToRecordAdapter<K
 	}
 
 	@Override
-	public void adapt(List<Message<?>> messages, List<ConsumerRecord<K, V>> records, Acknowledgment ack,
+	public void adapt(List<Message<?>> messages, List<ConsumerRecord<K, V>> records, Acknowledgement ack,
 			Consumer<?, ?> consumer, Callback<K, V> callback) {
 
 		for (int i = 0; i < messages.size(); i++) {

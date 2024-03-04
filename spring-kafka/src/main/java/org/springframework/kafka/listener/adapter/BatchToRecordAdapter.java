@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 the original author or authors.
+ * Copyright 2020-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import java.util.List;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 
-import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.kafka.support.Acknowledgement;
 import org.springframework.messaging.Message;
 
 /**
@@ -43,11 +43,11 @@ public interface BatchToRecordAdapter<K, V> {
 	 * Adapt the list and invoke the callback for each message.
 	 * @param messages the messages.
 	 * @param records the records.
-	 * @param ack the acknowledgment.
+	 * @param ack the acknowledgement.
 	 * @param consumer the consumer.
 	 * @param callback the callback.
 	 */
-	void adapt(List<Message<?>> messages, List<ConsumerRecord<K, V>> records, Acknowledgment ack,
+	void adapt(List<Message<?>> messages, List<ConsumerRecord<K, V>> records, Acknowledgement ack,
 			Consumer<?, ?> consumer, Callback<K, V> callback);
 
 	/**
@@ -62,12 +62,12 @@ public interface BatchToRecordAdapter<K, V> {
 		/**
 		 * Handle each message.
 		 * @param record the record.
-		 * @param ack the acknowledgment.
+		 * @param ack the acknowledgement.
 		 * @param consumer the consumer.
 		 * @param message the message.
 		 */
-		void invoke(ConsumerRecord<K, V> record, Acknowledgment ack, Consumer<?, ?> consumer,
-				Message<?> message);
+		void invoke(ConsumerRecord<K, V> record, Acknowledgement ack, Consumer<?, ?> consumer,
+                    Message<?> message);
 
 	}
 
